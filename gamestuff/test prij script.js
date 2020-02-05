@@ -93,17 +93,84 @@ function startGame() {
     var timer = setInterval(uGame, 20);
 }
 
-var x = screen.width/8, y = 0;
+var x = screen.width / 8, y = 0;
 var xchange = 0, ychange = 20;
 var timecount = 0;
-var blocks;
+var blocks = [
+    {
+        x: screen.width / 8,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: true
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375 * 2,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375 * 3,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375 * 4,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375 * 5,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375 * 6,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+    {
+        x: screen.width / 8 + screen.width * .09375 * 7,
+        y: 0,
+        xchange: 0,
+        ychange: 20,
+        enabled: false
+    },
+];
 
 function uGame() {
     const ctx = document.getElementById("game").getContext("2d");
-    ctx.clearRect(x, y, screen.width * .09375, 50);
-    count +=1;
+    timecount += 1;
+    for (let i = 0; i < blocks.length; i++) {
+        if(timecount%(Math.random()*9+2).toFixed(0) === 0)
+            blocks[i].enabled = true;
+        if (blocks[i].enabled === true) {
+            ctx.clearRect(blocks[i].x, blocks[i].y, screen.width * .09375, 50);
+            blocks[i].y += ychange;
+            blocks[i].x += xchange;
+            ctx.fillRect(blocks[i].x, blocks[i].y, screen.width * .09375, 50);
+        }
+        if (blocks[i].y > window.innerHeight){
+            blocks[i].enabled = false;
+            blocks[i].y = 0;
+        }
+    }
 
-    y += ychange;
-    x += xchange;
-    ctx.fillRect(x, y, screen.width * .09375, 50);
 }
