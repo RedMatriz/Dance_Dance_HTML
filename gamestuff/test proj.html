@@ -31,7 +31,6 @@
 
         li p {
             display: block;
-            color: white;
             text-align: center;
             text-decoration: none;
         }
@@ -50,19 +49,47 @@
 <body>
 <canvas id="game" width="1280" height="720">
 </canvas>
+
 <script>
+    var keys = [
+        {
+            key: "a",
+            keyId: "key0"
+        }, {
+            key: "s",
+            keyId: "key1"
+        }, {
+            key: "d",
+            keyId: "key2"
+        }, {
+            key: "f",
+            keyId: "key3"
+        }, {
+            key: "j",
+            keyId: "key4"
+        },{
+            key: "k",
+            keyId: "key5"
+        },{
+            key: "l",
+            keyId: "key6"
+        },{
+            key: ";",
+            keyId: "key7"
+        }];
+    addListeners(keys);
     startGame();
 </script>
 <div>
     <ul>
-        <li id="keyh0"><p id="key0">A</p></li>
-        <li id="keyh1"><p id="key1">S</p></li>
-        <li id="keyh2"><p id="key2">D</p></li>
-        <li id="keyh3"><p id="key3">F</p></li>
-        <li id="keyh4"><p id="key4">J</p></li>
-        <li id="keyh5"><p id="key5">K</p></li>
-        <li id="keyh6"><p id="key6">L</p></li>
-        <li id="keyh7"><p id="key7">;</p></li>
+        <li id="key0"><p>A</p></li>
+        <li id="key1"><p>S</p></li>
+        <li id="key2"><p>D</p></li>
+        <li id="key3"><p>F</p></li>
+        <li id="key4"><p>J</p></li>
+        <li id="key5"><p>K</p></li>
+        <li id="key6"><p>L</p></li>
+        <li id="key7"><p>;</p></li>
     </ul>
 </div>
 </body>
