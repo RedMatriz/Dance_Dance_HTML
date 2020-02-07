@@ -40,7 +40,7 @@ function uGame() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     timecount += 1;
-    if ((Math.random() * 50).toFixed(0) * 1 === 27) {
+    if ((Math.random() * 50).toFixed(0) * 1 <= 27) {
         blocks[(Math.random() * 8).toFixed(0)].push({
             x: screen.width / 8 + screen.width * .09375 * (Math.random() * 7).toFixed(0),
             y: 0,
