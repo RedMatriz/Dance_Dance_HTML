@@ -1,6 +1,7 @@
 var timecount = 0;
 var score = 0;
 var blocks = [[]];
+var pressed = [false, false, false, false, false, false, false, false]
 var keydata;
 
 
@@ -17,12 +18,16 @@ function addListeners(arr) {
                             blocks[arr[i].col].enabled = false;
                         }
                     }
+                    pressed[i] = true;
                 }
             }
         });
         document.addEventListener("keyup", function (event) {
             if (event.key === arr[i].key)
+            {
+                pressed[i] = false;
                 document.getElementById(arr[i].keyId).style = "";
+            }
         });
     }
 }
@@ -41,7 +46,7 @@ function uGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     timecount += 1;
     if ((Math.random() * 50).toFixed(0) * 1 === 27) {
-        blocks[(Math.random() * 8).toFixed(0)].push({
+        blocks.push({
             x: screen.width / 8 + screen.width * .09375 * (Math.random() * 7).toFixed(0),
             y: 0,
             xchange: 0,
@@ -52,21 +57,20 @@ function uGame() {
         });
     }
     for (let i = 0; i < blocks.length; i++) {
-        for (let j = 0; j < blocks[i].length; j++) {
-            blocks[i][j].y += blocks[i][j].ychange;
-            blocks[i][j].x += blocks[i][j].xchange;
-            if (blocks[i][j].enabled)
-                ctx.fillStyle = "#3957f0";
-            else
-                ctx.fillStyle = "#71aff0";
-            ctx.fillRect(blocks[i][j].x, blocks[i][j].y, blocks[i][j].width, blocks[i][j].height);
-            ctx.strokeRect(blocks[i][j].x, blocks[i][j].y, blocks[i][j].width, blocks[i][j].height);
-            if (blocks[i][j].y > window.innerHeight) {
-                blocks[i].splice(j, 1);
-                i--;
-            }
-            ctx.fillStyle = "#000000";
+        blocks[i].y += blocks[i].ychange;
+        blocks[i].x += blocks[i].xchange;
+        if (blocks[i].enabled)
+            ctx.fillStyle = "#3957f0";
+        else
+            ctx.fillStyle = "#71aff0";
+
+        ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+        ctx.strokeRect(blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+        if (blocks[i].y > window.innerHeight) {
+            blocks.splice(i, 1);
+            i--;
         }
+        ctx.fillStyle = "#000000";
     }
     ctx.font = "30px Ariel";
     ctx.fillText("Score: " + score, 10, 50, screen.width / 8);
