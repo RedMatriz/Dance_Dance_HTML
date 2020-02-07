@@ -1,32 +1,75 @@
 var timecount = 0;
 var score = 0;
-var blocks = [[]];
-var pressed = [false, false, false, false, false, false, false, false]
-var keydata;
+var blocks = [[], [], [], [], [], [], [], [], []];
+var pressed = [false, false, false, false, false, false, false, false];
+var keydata = [{
+    key: "a",
+    keyId: "key0",
+    col: 0
+}, {
+    key: "s",
+    keyId: "key1",
+    col: 1
+}, {
+    key: "d",
+    keyId: "key2",
+    col: 2
+}, {
+    key: "f",
+    keyId: "key3",
+    col: 3
+}, {
+    key: "j",
+    keyId: "key4",
+    col: 4
+}, {
+    key: "k",
+    keyId: "key5",
+    col: 5
+}, {
+    key: "l",
+    keyId: "key6",
+    col: 6
+}, {
+    key: ";",
+    keyId: "key7",
+    col: 7
+}];
+
+class Block {
+    constructor(x, y, xchange, ychange, width, height, enabled) {
+        this.x = x;
+        this.y = y;
+        this.xchange = xchange;
+        this.ychange = ychange;
+        this.width = width;
+        this.height = height;
+        this.enabled = enabled;
+    }
+
+}
 
 
-function addListeners(arr) {
-    keydata = arr;
-    for (let i = 0; i < arr.length; i++) {
+function addListeners() {
+    for (let i = 0; i < keydata.length; i++) {
         document.addEventListener("keydown", function (event) {
-            if (event.key === arr[i].key) {
-                document.getElementById(arr[i].keyId).style = "background-color:grey;color:red;";
-                for (let j = 0; j < blocks[arr[i].col].length; j++) {
-                    if (blocks[j].y + blocks[j].height >= window.innerHeight - document.getElementById(arr[i].keyId).clientHeight) {
-                        if (blocks[arr[i].col][j].enabled === true) {
+            if (event.key === keydata[i].key) {
+                pressed[i] = true;
+                document.getElementById(keydata[i].keyId).style = "background-color:grey;color:red;";
+                for (let j = 0; j < blocks[keydata[i].col].length; j++) {
+                    if (blocks[j].y + blocks[j].height >= window.innerHeight - document.getElementById(keydata[i].keyId).clientHeight - 50) {
+                        if (blocks[keydata[i].col][j].enabled === true) {
                             score += 1;
-                            blocks[arr[i].col].enabled = false;
+                            blocks[keydata[i].col].enabled = false;
                         }
                     }
-                    pressed[i] = true;
                 }
             }
         });
         document.addEventListener("keyup", function (event) {
-            if (event.key === arr[i].key)
-            {
+            if (event.key === keydata[i].key) {
                 pressed[i] = false;
-                document.getElementById(arr[i].keyId).style = "";
+                document.getElementById(keydata[i].keyId).style = "";
             }
         });
     }
@@ -45,16 +88,16 @@ function uGame() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     timecount += 1;
-    if ((Math.random() * 50).toFixed(0) * 1 <= 27) {
-        blocks[(Math.random() * 8).toFixed(0)].push({
-            x: screen.width / 8 + screen.width * .09375 * (Math.random() * 7).toFixed(0),
-            y: 0,
-            xchange: 0,
-            ychange: 5,
-            width: screen.width * .09375 - 50,
-            height: Math.random() * 100 + 50,
-            enabled: true
-        });
+    if ((Math.random() * 50).toFixed(0) * 1 <= 10) {
+        blocks[(Math.random() * 8).toFixed(0)].push(new Block(
+            screen.width / 8 + screen.width * .09375 * (Math.random() * 7).toFixed(0),
+            0,
+            0,
+            5,
+            screen.width * .09375 - 50,
+            Math.random() * 100 + 50,
+            true
+        ));
     }
     for (let i = 0; i < blocks.length; i++) {
         uColumn(blocks[i], ctx);
