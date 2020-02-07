@@ -1,6 +1,7 @@
 var timecount = 0;
 var score = 0;
 var blocks = [[]];
+var pressed = [false, false, false, false, false, false, false, false]
 var keydata;
 
 
@@ -17,12 +18,16 @@ function addListeners(arr) {
                             blocks[arr[i].col].enabled = false;
                         }
                     }
+                    pressed[i] = true;
                 }
             }
         });
         document.addEventListener("keyup", function (event) {
             if (event.key === arr[i].key)
+            {
+                pressed[i] = false;
                 document.getElementById(arr[i].keyId).style = "";
+            }
         });
     }
 }
