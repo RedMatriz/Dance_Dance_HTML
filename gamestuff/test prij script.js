@@ -52,23 +52,27 @@ function uGame() {
         });
     }
     for (let i = 0; i < blocks.length; i++) {
-        for (let j = 0; j < blocks[i].length; j++) {
-            blocks[i][j].y += blocks[i][j].ychange;
-            blocks[i][j].x += blocks[i][j].xchange;
-            if (blocks[i][j].enabled)
-                ctx.fillStyle = "#3957f0";
-            else
-                ctx.fillStyle = "#71aff0";
-            ctx.fillRect(blocks[i][j].x, blocks[i][j].y, blocks[i][j].width, blocks[i][j].height);
-            ctx.strokeRect(blocks[i][j].x, blocks[i][j].y, blocks[i][j].width, blocks[i][j].height);
-            if (blocks[i][j].y > window.innerHeight) {
-                blocks[i].splice(j, 1);
-                i--;
-            }
-            ctx.fillStyle = "#000000";
-        }
+        uColumn(blocks[i], ctx);
     }
     ctx.font = "30px Ariel";
     ctx.fillText("Score: " + score, 10, 50, screen.width / 8);
 
+}
+
+function uColumn(arr, ctx) {
+    for (let j = 0; j < arr.length; j++) {
+        arr[j].y += arr[j].ychange;
+        arr[j].x += arr[j].xchange;
+        if (arr[j].enabled)
+            ctx.fillStyle = "#3957f0";
+        else
+            ctx.fillStyle = "#71aff0";
+        ctx.fillRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
+        ctx.strokeRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
+        if (arr[j].y > window.innerHeight) {
+            arr.splice(j, 1);
+            i--;
+        }
+        ctx.fillStyle = "#000000";
+    }
 }
