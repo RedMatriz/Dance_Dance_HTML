@@ -69,7 +69,7 @@ function addListeners() {
         document.addEventListener("keyup", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = false;
-                document.getElementById(keydata[i].keyId).style = "";
+                document.getElementById(keydata[i].keyId).style = null;
             }
         });
     }
@@ -89,8 +89,9 @@ function uGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     timecount += 1;
     if ((Math.random() * 50).toFixed(0) * 1 <= 10) {
-        blocks[(Math.random() * 8).toFixed(0)].push(new Block(
-            screen.width / 8 + screen.width * .09375 * (Math.random() * 7).toFixed(0),
+        let loc = (Math.random() * 5).toFixed(0);
+        blocks[loc].push(new Block(
+            screen.width / 8 + screen.width * .09375 * loc,
             0,
             0,
             5,
@@ -101,6 +102,11 @@ function uGame() {
     }
     for (let i = 0; i < blocks.length; i++) {
         uColumn(blocks[i], ctx);
+        if (pressed[i]) {
+            ctx.fillRect(screen.width / 8 + screen.width * .09375 * i, canvas.height - 50, screen.width * .09375, 50)
+        } else {
+
+        }
     }
     ctx.font = "30px Ariel";
     ctx.fillText("Score: " + score, 10, 50, screen.width / 8);
@@ -111,16 +117,16 @@ function uColumn(arr, ctx) {
     for (let j = 0; j < arr.length; j++) {
         arr[j].y += arr[j].ychange;
         arr[j].x += arr[j].xchange;
+        if (arr[j].y > window.innerHeight) {
+            arr.splice(j, 1);
+            i--;
+        }
         if (arr[j].enabled)
             ctx.fillStyle = "#3957f0";
         else
             ctx.fillStyle = "#71aff0";
         ctx.fillRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
         ctx.strokeRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
-        if (arr[j].y > window.innerHeight) {
-            arr.splice(j, 1);
-            i--;
-        }
         ctx.fillStyle = "#000000";
     }
 }
