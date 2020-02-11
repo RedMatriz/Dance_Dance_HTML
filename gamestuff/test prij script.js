@@ -1,12 +1,8 @@
 var timecount = 0;
 var score = 0;
-var blocks = [[], [], [], [], [], [], [], [], []];
-var pressed = [false, false, false, false, false, false, false, false];
+var blocks = [[], [], [], [], [], [], [], []];
+var pressed = [false, false, false, false, false, false];
 var keydata = [{
-    key: "a",
-    keyId: "key0",
-    col: 0
-}, {
     key: "s",
     keyId: "key1",
     col: 1
@@ -30,10 +26,6 @@ var keydata = [{
     key: "l",
     keyId: "key6",
     col: 6
-}, {
-    key: ";",
-    keyId: "key7",
-    col: 7
 }];
 
 class Block {
@@ -54,24 +46,14 @@ function addListeners() {
     for (let i = 0; i < keydata.length; i++) {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
-                if (!pressed[i]) {
-                    pressed[i] = true;
-                    document.getElementById(keydata[i].keyId).style = "background-color:grey;color:red;";
-                    for (let j = 0; j < blocks[keydata[i].col].length; j++) {
-                        if (blocks[j].y + blocks[j].height >= window.innerHeight - document.getElementById(keydata[i].keyId).clientHeight - 50) {
-                            if (blocks[keydata[i].col][j].enabled === true) {
-                                score += 1;
-                                blocks[keydata[i].col].enabled = false;
-                            }
-                        }
-                    }
-                }
+                pressed[i] = true;
+                // document.getElementById(keydata[i].keyId).style = "background-color:grey;color:red;";
             }
         });
         document.addEventListener("keyup", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = false;
-                document.getElementById(keydata[i].keyId).style = null;
+                // document.getElementById(keydata[i].keyId).style = null;
             }
         });
     }
@@ -81,7 +63,7 @@ function startGame() {
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight - 20;
+    ctx.canvas.height = window.innerHeight;
     const timer = setInterval(uGame, 20);
 }
 
@@ -90,16 +72,16 @@ function uGame() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = "30px Ariel";
-    ctx.fillText("Score: " + score, 10, 50, screen.width / 8);
+    ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
     if ((Math.random() * 5).toFixed(0) * 1 === 3) {
         const loc = (Math.random() * 5).toFixed(0);
         blocks[loc].push(new Block(
-            screen.width / 8 + screen.width * .09375 * loc,
+            window.innerWidth / 8 * (loc + 1) + window.innerWidth / 16 - (window.innerWidth / 8 - 50) / 2,
             0,
             0,
             5,
-            screen.width * .09375 - 50,
+            window.innerWidth / 8 - 50,
             Math.random() * 100 + 50,
             true
         ));
@@ -107,10 +89,13 @@ function uGame() {
     for (let i = 0; i < blocks.length; i++) {
         uColumn(blocks[i], ctx);
         if (pressed[i]) {
-            ctx.fillRect(screen.width / 8 + screen.width * .09375 * i, canvas.height - 50, screen.width * .09375, 50)
-        } else {
+            ctx.fillStyle = "#6cb3ff";
 
+        } else {
+            ctx.fillStyle = "#a9ff5a";
         }
+        ctx.fillRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
+        ctx.strokeRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
     }
 }
 
@@ -125,8 +110,8 @@ function uColumn(arr, ctx) {
             ctx.fillStyle = "#3957f0";
         else
             ctx.fillStyle = "#71aff0";
-        ctx.fillRect(arr[j].x + screen.width * .09375 / 2 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
-        ctx.strokeRect(arr[j].x + screen.width * .09375 / 2 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
+        ctx.fillRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
+        ctx.strokeRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
         ctx.fillStyle = "#000000";
     }
 }
