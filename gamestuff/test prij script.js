@@ -92,10 +92,10 @@ function uGame() {
 
         }
         if (pressed[i]) {
-            ctx.fillStyle = "#6cb3ff";
+            ctx.fillStyle = "#34ff34";
 
         } else {
-            ctx.fillStyle = "#a9ff5a";
+            ctx.fillStyle = "rgba(255,255,255,0)";
         }
         ctx.fillRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
         ctx.strokeRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
