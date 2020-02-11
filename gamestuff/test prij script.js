@@ -89,6 +89,8 @@ function uGame() {
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "30px Ariel";
+    ctx.fillText("Score: " + score, 10, 50, screen.width / 8);
     timecount += 1;
     if ((Math.random() * 5).toFixed(0) * 1 === 3) {
         const loc = (Math.random() * 5).toFixed(0);
@@ -110,8 +112,6 @@ function uGame() {
 
         }
     }
-    ctx.font = "30px Ariel";
-    ctx.fillText("Score: " + score, 10, 50, screen.width / 8);
 }
 
 function uColumn(arr, ctx) {
