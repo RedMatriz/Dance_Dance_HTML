@@ -47,6 +47,13 @@ function addListeners() {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = true;
+                for(var j = 0; j < blocks[i].length; j++)
+                {
+                    if(((blocks[i][j].y * 1) + (blocks[i][j].height * 1)) > 900 && ((blocks[i][j].y * 1) + (blocks[i][j].height * 1)) < (900 + blocks[i][j].height))
+                    {
+                        score = score + 1;
+                    }
+                }
             }
         });
         document.addEventListener("keyup", function (event) {
