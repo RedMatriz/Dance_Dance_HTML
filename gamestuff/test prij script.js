@@ -62,6 +62,7 @@ function startGame() {
     const ctx = canvas.getContext("2d");
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
+    ctx.font = "30px Ariel";
     const timer = setInterval(uGame, 20);
 }
 
@@ -69,13 +70,13 @@ function uGame() {
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "30px Ariel";
+    ctx.fillStyle = "#000000"
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if ((Math.random() * 5).toFixed(0) * 1 === 3) {
-        const loc = (Math.random() * 5).toFixed(0);
+    if ((Math.random() * 10).toFixed(0) * 1 === 3) {
+        let loc = (Math.random() * 5).toFixed(0);
         blocks[loc].push(new Block(
-            window.innerWidth / 8 * (loc + 1) + window.innerWidth / 16 - (window.innerWidth / 8 - 50) / 2,
+            window.innerWidth / 8 * loc + window.innerWidth / 8,
             0,
             0,
             5,
@@ -84,13 +85,17 @@ function uGame() {
             true
         ));
     }
-    for (let i = 0; i < blocks.length; i++) {
-        uColumn(blocks[i], ctx);
+    for (let i = 0; i < 6; i++) {
+        try {
+            uColumn(blocks[i], ctx);
+        } catch (e) {
+
+        }
         if (pressed[i]) {
-            ctx.fillStyle = "#6cb3ff";
+            ctx.fillStyle = "#34ff34";
 
         } else {
-            ctx.fillStyle = "#a9ff5a";
+            ctx.fillStyle = "rgba(0,0,0,0)";
         }
         ctx.fillRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
         ctx.strokeRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
@@ -108,8 +113,8 @@ function uColumn(arr, ctx) {
             ctx.fillStyle = "#3957f0";
         else
             ctx.fillStyle = "#71aff0";
-        ctx.fillRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
-        ctx.strokeRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
+        ctx.fillRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
+        ctx.strokeRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
         ctx.fillStyle = "#000000";
     }
 }
