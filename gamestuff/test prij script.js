@@ -47,13 +47,11 @@ function addListeners() {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = true;
-                // document.getElementById(keydata[i].keyId).style = "background-color:grey;color:red;";
             }
         });
         document.addEventListener("keyup", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = false;
-                // document.getElementById(keydata[i].keyId).style = null;
             }
         });
     }
