@@ -47,13 +47,6 @@ function addListeners() {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = true;
-                for(var j = 0; j < blocks[i].length; j++)
-                {
-                    if(((blocks[i][j].y * 1) + (blocks[i][j].height * 1)) > 900 && ((blocks[i][j].y * 1) + (blocks[i][j].height * 1)) < (900 + blocks[i][j].height))
-                    {
-                        score = score + 1;
-                    }
-                }
             }
         });
         document.addEventListener("keyup", function (event) {
@@ -80,7 +73,7 @@ function uGame() {
     ctx.fillStyle = "#000000"
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if ((Math.random() * 10).toFixed(0) * 1 === 3) {
+    if ((Math.random() * 20).toFixed(0) * 1 === 3) {
         let loc = (Math.random() * 5).toFixed(0);
         blocks[loc].push(new Block(
             window.innerWidth / 8 * loc + window.innerWidth / 8,
@@ -88,11 +81,17 @@ function uGame() {
             0,
             5,
             window.innerWidth / 8 - 50,
-            Math.random() * 100 + 50,
+            50,
             true
         ));
     }
     for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < blocks[i].length; j++) {
+            if (pressed[i])
+                if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
+                    score = score + 1;
+                }
+        }
         try {
             uColumn(blocks[i], ctx);
         } catch (e) {
