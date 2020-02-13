@@ -70,10 +70,10 @@ function uGame() {
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#000000"
+    ctx.fillStyle = "#000000";
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if ((Math.random() * 20).toFixed(0) * 1 === 3) {
+    if ((Math.random() * 20).toFixed(0) * 1 === 3 && timecount % 4 === 0) {
         let loc = (Math.random() * 5).toFixed(0);
         blocks[loc].push(new Block(
             window.innerWidth / 8 * loc + window.innerWidth / 8,
@@ -90,6 +90,7 @@ function uGame() {
             if (pressed[i])
                 if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
                     score = score + 1;
+                    blocks[i][j].enabled = false;
                 }
         }
         try {
