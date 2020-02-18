@@ -1,5 +1,7 @@
 var timecount = 0;
 var score = 0;
+var timer;
+var start = true;
 var blocks = [[], [], [], [], [], [], [], []];
 var pressed = [false, false, false, false, false, false];
 var keydata = [{
@@ -28,6 +30,7 @@ var keydata = [{
     col: 6
 }];
 
+
 class Block {
     constructor(x, y, xchange, ychange, width, height, enabled) {
         this.x = x;
@@ -43,6 +46,13 @@ class Block {
 
 
 function addListeners() {
+    document.addEventListener("keyup", function (event) {
+        if (event.key === "q" && start) {
+            document.getElementById("TheBois").play();
+            startGame();
+            start = false;
+        }
+    });
     for (let i = 0; i < keydata.length; i++) {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
@@ -63,7 +73,7 @@ function startGame() {
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     ctx.font = "30px Ariel";
-    const timer = setInterval(uGame, 20);
+    timer = setInterval(uGame, 20);
 }
 
 function uGame() {
