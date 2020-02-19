@@ -4,7 +4,6 @@ var timer;
 var start = true;
 var blocks = [[], [], [], [], [], [], [], []];
 var pressed = [false, false, false, false, false, false];
-var press = [false, false, false, false, false, false];
 var keydata = [{
     key: "s",
     keyId: "key1",
