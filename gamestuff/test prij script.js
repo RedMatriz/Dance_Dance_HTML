@@ -4,6 +4,7 @@ var timer;
 var start = true;
 var blocks = [[], [], [], [], [], [], [], []];
 var pressed = [false, false, false, false, false, false];
+var updated = [false, false, false, false, false, false];
 var keydata = [{
     key: "s",
     keyId: "key1",
@@ -62,6 +63,7 @@ function addListeners() {
         document.addEventListener("keyup", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = false;
+                updated[i] = false;
             }
         });
     }
@@ -95,7 +97,7 @@ function uGame() {
             window.innerWidth / 8 - 50,
             50,
             true,
-            true
+            false
         ));
     }
     for (let i = 0; i < 6; i++) {
@@ -107,16 +109,23 @@ function uGame() {
             ctx.fillStyle = "#55ff71";
         }
         for (let j = 0; j < blocks[i].length; j++) {
-            if (pressed[i])
-                if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
-                    score = score + 1;
-                    blocks[i][j].enabled = false;
-                    if(!blocks[i][j].ishold)
-                    {
-                        score = score + 29;
-                        blocks[i].splice(0, 1);
+            if (pressed[i]) {
+                if (!updated[i]) {
+                    updated[i] = true;
+                    if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
+                        if (!blocks[i][j].ishold) {
+                            score += 30;
+                            blocks[i][j].enabled = false;
+                        }
                     }
                 }
+                if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
+                    if (blocks[i][j].ishold) {
+                        score += 1;
+                        blocks[i][j].enabled = false;
+                    }
+                }
+            }
         }
         try {
             uColumn(blocks[i], ctx);
@@ -140,14 +149,16 @@ function uColumn(arr, ctx) {
     if (arr[0].y > window.innerHeight) {
         arr.splice(0, 1);
     }
+    var temp = ctx.fillStyle;
     for (let j = 0; j < arr.length; j++) {
         arr[j].y += arr[j].ychange;
         arr[j].x += arr[j].xchange;
-        if (arr[j].enabled)
-            ctx.strokeStyle = "#3957f0";
+        if (!arr[j].enabled)
+            ctx.fillStyle = "#505050";
         else
             ctx.strokeStyle = "#71aff0";
         ctx.fillRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
         ctx.strokeRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
+        ctx.fillStyle = temp;
     }
 }
