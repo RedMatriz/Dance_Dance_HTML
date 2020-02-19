@@ -1,8 +1,5 @@
 var timecount = 0;
-var score = 0;
-var timer;
-var start = true;
-var blocks = [[], [], [], [], [], [], [], []];
+var txtFile = new XMLHttpRequest();
 var pressed = [false, false, false, false, false, false];
 var keydata = [{
     key: "s",
@@ -30,7 +27,6 @@ var keydata = [{
     col: 6
 }];
 
-
 class Block {
     constructor(x, y, xchange, ychange, width, height, enabled) {
         this.x = x;
@@ -46,13 +42,6 @@ class Block {
 
 
 function addListeners() {
-    document.addEventListener("keyup", function (event) {
-        if (event.key === "q" && start) {
-            document.getElementById("TheBois").play();
-            startGame();
-            start = false;
-        }
-    });
     for (let i = 0; i < keydata.length; i++) {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
@@ -70,51 +59,30 @@ function addListeners() {
 function startGame() {
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
+    txtFile.open("GET", "file://d:/data.txt", true);
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    ctx.font = "30px Ariel";
-    timer = setInterval(uGame, 20);
+    const timer = setInterval(uGame, 20);
 }
 
 function uGame() {
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#000000";
-    ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if ((Math.random() * 20).toFixed(0) * 1 === 3 && timecount % 4 === 0) {
-        let loc = (Math.random() * 5).toFixed(0);
-        blocks[loc].push(new Block(
-            window.innerWidth / 8 * loc + window.innerWidth / 8,
-            0,
-            0,
-            5,
-            window.innerWidth / 8 - 50,
-            50,
-            true
-        ));
-    }
     for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < blocks[i].length; j++) {
-            if (pressed[i])
-                if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
-                    score = score + 1;
-                    blocks[i][j].enabled = false;
-                }
-        }
         try {
             uColumn(blocks[i], ctx);
         } catch (e) {
-
         }
         if (pressed[i]) {
             ctx.fillStyle = "#34ff34";
+
         } else {
             ctx.fillStyle = "rgba(0,0,0,0)";
         }
-        ctx.fillRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
-        ctx.strokeRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
+        ctx.fillRect(window.innerWidth / 8 * (i + 1), 50, window.innerWidth / 8, 50);
+        ctx.strokeRect(window.innerWidth / 8 * (i + 1), 50, window.innerWidth / 8, 50);
     }
 }
 
