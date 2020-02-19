@@ -81,15 +81,17 @@ function uGame() {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#adadad";
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if ((Math.random() * 20).toFixed(0) * 1 === 3 && timecount % 4 === 0) {
+    if (timecount % 50 === 0) {
         let loc = (Math.random() * 5).toFixed(0);
         blocks[loc].push(new Block(
             window.innerWidth / 8 * loc + window.innerWidth / 8,
             0,
             0,
-            5,
+            10,
             window.innerWidth / 8 - 50,
             50,
             true,
@@ -97,6 +99,13 @@ function uGame() {
         ));
     }
     for (let i = 0; i < 6; i++) {
+        if (i === 0 || i === 5) {
+            ctx.fillStyle = "#4fbfff";
+        } else if (i === 2 || i === 3) {
+            ctx.fillStyle = "#ff6c5e";
+        } else {
+            ctx.fillStyle = "#55ff71";
+        }
         for (let j = 0; j < blocks[i].length; j++) {
             if (pressed[i])
                 if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
@@ -115,12 +124,15 @@ function uGame() {
 
         }
         if (pressed[i]) {
-            ctx.fillStyle = "#34ff34";
+            ctx.strokeStyle = "#34ff34";
         } else {
-            ctx.fillStyle = "rgba(0,0,0,0)";
+            ctx.strokeStyle = "rgba(200,200,200,1)";
         }
-        ctx.fillRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
-        ctx.strokeRect(window.innerWidth / 8 * (i + 1), canvas.height - 50, window.innerWidth / 8, 50);
+        ctx.lineWidth = 3;
+        ctx.strokeRect(window.innerWidth / 8 * (i + 1) + 1, canvas.height - 50, window.innerWidth / 8 - 2, 30);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(200,200,200,1)";
+        ctx.fillStyle = "#000000";
     }
 }
 
@@ -132,11 +144,10 @@ function uColumn(arr, ctx) {
         arr[j].y += arr[j].ychange;
         arr[j].x += arr[j].xchange;
         if (arr[j].enabled)
-            ctx.fillStyle = "#3957f0";
+            ctx.strokeStyle = "#3957f0";
         else
-            ctx.fillStyle = "#71aff0";
+            ctx.strokeStyle = "#71aff0";
         ctx.fillRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
         ctx.strokeRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
-        ctx.fillStyle = "#000000";
     }
 }
