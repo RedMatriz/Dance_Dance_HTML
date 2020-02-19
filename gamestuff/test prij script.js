@@ -4,6 +4,7 @@ var timer;
 var start = true;
 var blocks = [[], [], [], [], [], [], [], []];
 var pressed = [false, false, false, false, false, false];
+var press = [false, false, false, false, false, false];
 var keydata = [{
     key: "s",
     keyId: "key1",
@@ -32,7 +33,7 @@ var keydata = [{
 
 
 class Block {
-    constructor(x, y, xchange, ychange, width, height, enabled) {
+    constructor(x, y, xchange, ychange, width, height, enabled, type) {
         this.x = x;
         this.y = y;
         this.xchange = xchange;
@@ -40,8 +41,8 @@ class Block {
         this.width = width;
         this.height = height;
         this.enabled = enabled;
+        this.ishold = type;
     }
-
 }
 
 
@@ -92,6 +93,7 @@ function uGame() {
             5,
             window.innerWidth / 8 - 50,
             50,
+            true,
             true
         ));
     }
@@ -101,6 +103,11 @@ function uGame() {
                 if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
                     score = score + 1;
                     blocks[i][j].enabled = false;
+                    if(!blocks[i][j].ishold)
+                    {
+                        score = score + 29;
+                        blocks[i].splice(0, 1);
+                    }
                 }
         }
         try {
