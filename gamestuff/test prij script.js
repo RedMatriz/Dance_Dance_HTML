@@ -89,11 +89,12 @@ function uGame() {
     timecount += 1;
     if (timecount % 40 === 0) {
         let loc = (Math.random() * 5).toFixed(0);
+        let multiplier = (canvas.height - 50) / 3 + 5;
         blocks[loc].push(new Block(
             window.innerWidth / 8 * loc + window.innerWidth / 8,
+            canvas.height - 50 - multiplier * 3,
             0,
-            0,
-            10,
+            3,
             window.innerWidth / 8 - 50,
             50,
             true,
