@@ -58,6 +58,9 @@ function addListeners() {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
                 pressed[i] = true;
+                score -= 10;
+                if (score < 0)
+                    score = 0;
             }
         });
         document.addEventListener("keyup", function (event) {
@@ -75,7 +78,7 @@ function startGame() {
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     ctx.font = "30px Ariel";
-    timer = setInterval(uGame, 10);
+    timer = setInterval(uGame, 5);
 }
 
 function uGame() {
@@ -87,13 +90,14 @@ function uGame() {
     ctx.fillStyle = "#adadad";
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if (timecount % 40 === 0) {
+    if ((timecount - 9200) % 79 === 0 && (timecount - 9200) > 0) {
         let loc = (Math.random() * 5).toFixed(0);
+        let multiplier = (canvas.height - 50) / 2 + 1;
         blocks[loc].push(new Block(
             window.innerWidth / 8 * loc + window.innerWidth / 8,
+            canvas.height - 50 - multiplier * 2,
             0,
-            0,
-            10,
+            2,
             window.innerWidth / 8 - 50,
             50,
             true,
@@ -114,7 +118,7 @@ function uGame() {
                     updated[i] = true;
                     if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
                         if (!blocks[i][j].ishold) {
-                            score += 30;
+                            score += 40;
                             blocks[i][j].enabled = false;
                         }
                     }
@@ -123,6 +127,10 @@ function uGame() {
                     if (blocks[i][j].ishold) {
                         score += 1;
                         blocks[i][j].enabled = false;
+                    }
+                    if (!updated[i]) {
+                        updated[i] = true;
+                        score += 10;
                     }
                 }
             }
