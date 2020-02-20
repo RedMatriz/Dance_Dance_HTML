@@ -75,7 +75,7 @@ function startGame() {
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     ctx.font = "30px Ariel";
-    timer = setInterval(uGame, 20);
+    timer = setInterval(uGame, 10);
 }
 
 function uGame() {
@@ -87,7 +87,7 @@ function uGame() {
     ctx.fillStyle = "#adadad";
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if (timecount % 50 === 0) {
+    if (timecount % 40 === 0) {
         let loc = (Math.random() * 5).toFixed(0);
         blocks[loc].push(new Block(
             window.innerWidth / 8 * loc + window.innerWidth / 8,
