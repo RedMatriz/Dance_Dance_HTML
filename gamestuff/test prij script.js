@@ -70,10 +70,6 @@ function initiate(keys) {
 function addListeners() {
     document.addEventListener("keyup", function (event) {
         if (event.key === "b" && start) {
-            var multiplier = (ctx.canvas.height - hitteroffset - hitterheight) / fallrate;
-            setTimeout(function () {
-                document.getElementById("player").play();
-            }, multiplier * 10);
             startGame();
             start = false;
         }
@@ -96,6 +92,10 @@ function addListeners() {
 function startGame() {
     starttime = Date.now();
     timer = setInterval(uGame, 10);
+    var multiplier = (ctx.canvas.height - hitteroffset - hitterheight) / fallrate;
+    setTimeout(function () {
+        document.getElementById("player").play();
+    }, multiplier * 10);
 }
 
 var timekeeper = 0;
