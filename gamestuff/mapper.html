@@ -12,17 +12,48 @@
         canvas {
             margin: 0;
             width: 100%;
-            height: 100%;
+            height: 80%;
         }
+
+        audio {
+            margin: 0 0;
+        }
+        div {
+            margin: 0;
+            height: 20%;
+        }
+
     </style>
 </head>
 <body>
-<audio hidden="true" id="player" src="Giornos_Theme.wav"></audio>
-<a href="" id="output">Download file</a>
+<div>
+    <audio id="player" controls src="Giornos_Theme.wav"></audio>
+    <h1 id="display">Readout</h1>
+    <a download="btmap.btm" id="output">Download file</a>
+</div>
 <canvas id="game" width="1280" height="720">
 </canvas>
 <script>
-    initiate();
+    var keydata = [{
+        key: "s",
+        color:"#4fbfff",
+    }, {
+        key: "d",
+        color:"#55ff71",
+    }, {
+        key: "f",
+        color:"#ff6c5e",
+    }, {
+        key: "j",
+        color:"#ff6c5e",
+    }, {
+        key: "k",
+        color:"#55ff71",
+    }, {
+        key: "l",
+        color:"#4fbfff",
+    }];
+    initiate(keydata);
 </script>
 </body>
 </html>
