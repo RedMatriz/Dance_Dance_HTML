@@ -16,14 +16,31 @@
         }
     </style>
 </head>
-<!--<embed name="BackStreetBois" src="Backstreet%20Boys%20-%20I%20Want%20It%20That%20Way.mp3" loop="false" hidden="true" autostart="true">-->
-<audio hidden="true" id="TheBois" controls src="Japanese%20Man%20-%20All%20I%20Want%20For%20Christmas2.mp3">
-    <p>If you are reading this, it is because your browser does not support the audio element.</p>
-</audio>
+<body>
+<audio hidden="true" id="player" src="Giornos_Theme.mp3"></audio>
 <canvas id="game" width="1280" height="720">
 </canvas>
 <script>
-    addListeners();
+    var keydata = [{
+        key: "s",
+        color:"#4fbfff",
+    }, {
+        key: "d",
+        color:"#55ff71",
+    }, {
+        key: "f",
+        color:"#ff6c5e",
+    }, {
+        key: "j",
+        color:"#ff6c5e",
+    }, {
+        key: "k",
+        color:"#55ff71",
+    }, {
+        key: "l",
+        color:"#4fbfff",
+    }];
+    initiate(keydata);
 </script>
 </body>
 </html>

@@ -1,104 +1,18 @@
-var timecount = 0;
-var txtFile = new XMLHttpRequest();
-var pressed = [false, false, false, false, false, false];
-var keydata = [{
-    key: "s",
-    keyId: "key1",
-    col: 1
-}, {
-    key: "d",
-    keyId: "key2",
-    col: 2
-}, {
-    key: "f",
-    keyId: "key3",
-    col: 3
-}, {
-    key: "j",
-    keyId: "key4",
-    col: 4
-}, {
-    key: "k",
-    keyId: "key5",
-    col: 5
-}, {
-    key: "l",
-    keyId: "key6",
-    col: 6
-}];
+function testFile() {
+    const fs = require('fs');
+    // Reading data in utf-8 format
+// which is a type of character set.
+// Instead of 'utf-8' it can be
+// other character set also like 'ascii'
+    fs.readFile('Input.txt', 'utf-8', (err, data) => {
+        if (err) throw err;
 
-class Block {
-    constructor(x, y, xchange, ychange, width, height, enabled) {
-        this.x = x;
-        this.y = y;
-        this.xchange = xchange;
-        this.ychange = ychange;
-        this.width = width;
-        this.height = height;
-        this.enabled = enabled;
-    }
+        // Converting Raw Buffer to text
+        // data using tostring function.
+        console.log(data);
+    })
+    // var reader = new FileReader();
+    // var file = new File([], "timings.tmg", undefined);
+    // var output = reader.readAsText(file);
 
-}
-
-
-function addListeners() {
-    for (let i = 0; i < keydata.length; i++) {
-        document.addEventListener("keydown", function (event) {
-            if (event.key === keydata[i].key) {
-                pressed[i] = true;
-            }
-        });
-        document.addEventListener("keyup", function (event) {
-            if (event.key === keydata[i].key) {
-                pressed[i] = false;
-            }
-        });
-    }
-}
-
-function startGame() {
-    const canvas = document.getElementById("game");
-    const ctx = canvas.getContext("2d");
-    txtFile.open("GET", "file://d:/data.txt", true);
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-    const timer = setInterval(uGame, 20);
-}
-
-function uGame() {
-    const canvas = document.getElementById("game");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    timecount += 1;
-    for (let i = 0; i < 6; i++) {
-        try {
-            uColumn(blocks[i], ctx);
-        } catch (e) {
-        }
-        if (pressed[i]) {
-            ctx.fillStyle = "#34ff34";
-
-        } else {
-            ctx.fillStyle = "rgba(0,0,0,0)";
-        }
-        ctx.fillRect(window.innerWidth / 8 * (i + 1), 50, window.innerWidth / 8, 50);
-        ctx.strokeRect(window.innerWidth / 8 * (i + 1), 50, window.innerWidth / 8, 50);
-    }
-}
-
-function uColumn(arr, ctx) {
-    if (arr[0].y > window.innerHeight) {
-        arr.splice(0, 1);
-    }
-    for (let j = 0; j < arr.length; j++) {
-        arr[j].y += arr[j].ychange;
-        arr[j].x += arr[j].xchange;
-        if (arr[j].enabled)
-            ctx.fillStyle = "#3957f0";
-        else
-            ctx.fillStyle = "#71aff0";
-        ctx.fillRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
-        ctx.strokeRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
-        ctx.fillStyle = "#000000";
-    }
 }

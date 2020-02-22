@@ -2,34 +2,17 @@ var timecount = 0;
 var score = 0;
 var timer;
 var start = true;
-var blocks = [[], [], [], [], [], [], [], []];
-var pressed = [false, false, false, false, false, false];
-var updated = [false, false, false, false, false, false];
-var keydata = [{
-    key: "s",
-    keyId: "key1",
-    col: 1
-}, {
-    key: "d",
-    keyId: "key2",
-    col: 2
-}, {
-    key: "f",
-    keyId: "key3",
-    col: 3
-}, {
-    key: "j",
-    keyId: "key4",
-    col: 4
-}, {
-    key: "k",
-    keyId: "key5",
-    col: 5
-}, {
-    key: "l",
-    keyId: "key6",
-    col: 6
-}];
+var canvas;
+var ctx;
+var starttime;
+const fallrate = 5;
+const blockwidth = 200;
+const hitterheight = 30;
+const hitteroffset = 10;
+var blocks = [];
+var hitters = [];
+var updated = [];
+var keydata = [];
 
 
 class Block {
@@ -45,11 +28,52 @@ class Block {
     }
 }
 
+class Hitter {
+    constructor(x, y, width, height, active, updated) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.active = active;
+        this.updated = updated;
+    }
+}
+
+function initiate(keys) {
+    keydata = keys;
+    canvas = document.getElementById("game");
+    ctx = canvas.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    for (let i = 0; i < keydata.length; i++) {
+        hitters.push(new Hitter(
+            ctx.canvas.width / (keydata.length + 2) * (i + 1) + 1,
+            ctx.canvas.height - (hitterheight + hitteroffset),
+            window.innerWidth / (keydata.length + 2) - 2,
+            hitterheight,
+            false,
+            false));
+        blocks.push([]);
+    }
+    addListeners();
+    //background
+    uGame();
+    //foreground
+    ctx.font = "30px Ariel";
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1;
+    var textString = "Press B to begin";
+    ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
+}
+
 
 function addListeners() {
     document.addEventListener("keyup", function (event) {
-        if (event.key === "q" && start) {
-            document.getElementById("TheBois").play();
+        if (event.key === "b" && start) {
+            var multiplier = (ctx.canvas.height - hitteroffset - hitterheight) / fallrate;
+            setTimeout(function () {
+                document.getElementById("player").play();
+            }, multiplier * 10);
             startGame();
             start = false;
         }
@@ -57,26 +81,24 @@ function addListeners() {
     for (let i = 0; i < keydata.length; i++) {
         document.addEventListener("keydown", function (event) {
             if (event.key === keydata[i].key) {
-                pressed[i] = true;
+                hitters[i].active = true;
             }
         });
         document.addEventListener("keyup", function (event) {
             if (event.key === keydata[i].key) {
-                pressed[i] = false;
-                updated[i] = false;
+                hitters[i].active = false;
+                hitters[i].updated = false;
             }
         });
     }
 }
 
 function startGame() {
-    const canvas = document.getElementById("game");
-    const ctx = canvas.getContext("2d");
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-    ctx.font = "30px Ariel";
+    starttime = Date.now();
     timer = setInterval(uGame, 10);
 }
+
+var timekeeper = 0;
 
 function uGame() {
     const canvas = document.getElementById("game");
@@ -85,41 +107,41 @@ function uGame() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#adadad";
+    ctx.font = "30px Ariel";
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
     timecount += 1;
-    if (timecount % 40 === 0) {
-        let loc = (Math.random() * 5).toFixed(0);
+    timekeeper += 1;
+    const currenttime = Date.now() - starttime;
+    if (timecount % 46 <= 0) {
+        const loc = (Math.random() * (keydata.length - 1)).toFixed(0);
         blocks[loc].push(new Block(
-            window.innerWidth / 8 * loc + window.innerWidth / 8,
+            window.innerWidth / (keydata.length + 2) * loc + window.innerWidth / (keydata.length + 2) + (window.innerWidth / (keydata.length + 2) / 2 - blockwidth / 2),
             0,
             0,
-            10,
-            window.innerWidth / 8 - 50,
-            50,
+            fallrate,
+            blockwidth,
+            -50,
             true,
             false
         ));
     }
-    for (let i = 0; i < 6; i++) {
-        if (i === 0 || i === 5) {
-            ctx.fillStyle = "#4fbfff";
-        } else if (i === 2 || i === 3) {
-            ctx.fillStyle = "#ff6c5e";
-        } else {
-            ctx.fillStyle = "#55ff71";
-        }
+    if (timekeeper === 10) {
+        timekeeper = 0;
+        timecount += 1;
+    }
+    for (let i = 0; i < keydata.length; i++) {
         for (let j = 0; j < blocks[i].length; j++) {
-            if (pressed[i]) {
-                if (!updated[i]) {
-                    updated[i] = true;
-                    if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
+            if (hitters[i].active) {
+                if (!hitters[i].updated) {
+                    hitters[i].updated = true;
+                    if (blocks[i][j].y > canvas.height - 50) {
                         if (!blocks[i][j].ishold) {
                             score += 30;
                             blocks[i][j].enabled = false;
                         }
                     }
                 }
-                if ((blocks[i][j].y + blocks[i][j].height) > canvas.height - 50) {
+                if (blocks[i][j].y > canvas.height - 50) {
                     if (blocks[i][j].ishold) {
                         score += 1;
                         blocks[i][j].enabled = false;
@@ -128,37 +150,41 @@ function uGame() {
             }
         }
         try {
-            uColumn(blocks[i], ctx);
+            ctx.fillStyle = keydata[i].color;
+            ctx.strokeStyle = "#adadad";
+            drawColumn(blocks[i], ctx);
         } catch (e) {
-
         }
-        if (pressed[i]) {
-            ctx.strokeStyle = "#34ff34";
-        } else {
-            ctx.strokeStyle = "rgba(200,200,200,1)";
-        }
-        ctx.lineWidth = 3;
-        ctx.strokeRect(window.innerWidth / 8 * (i + 1) + 1, canvas.height - 50, window.innerWidth / 8 - 2, 30);
+        drawHitter(hitters[i], ctx);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "rgba(200,200,200,1)";
         ctx.fillStyle = "#000000";
+        ctx.strokeStyle = "#adadad";
     }
 }
 
-function uColumn(arr, ctx) {
-    if (arr[0].y > window.innerHeight) {
+function drawColumn(arr, ctx) {
+    if (arr[0].y + arr[0].height > window.innerHeight) {
         arr.splice(0, 1);
     }
     var temp = ctx.fillStyle;
     for (let j = 0; j < arr.length; j++) {
+
         arr[j].y += arr[j].ychange;
         arr[j].x += arr[j].xchange;
         if (!arr[j].enabled)
             ctx.fillStyle = "#505050";
-        else
-            ctx.strokeStyle = "#71aff0";
-        ctx.fillRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
-        ctx.strokeRect(arr[j].x + window.innerWidth / 16 - arr[j].width / 2, arr[j].y, arr[j].width, arr[j].height);
+        ctx.fillRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
+        ctx.strokeRect(arr[j].x, arr[j].y, arr[j].width, arr[j].height);
         ctx.fillStyle = temp;
     }
+}
+
+function drawHitter(hitter, ctx) {
+    if (hitter.active) {
+        ctx.strokeStyle = "#34ff34";
+    } else {
+        ctx.strokeStyle = "rgba(200,200,200,1)";
+    }
+    ctx.lineWidth = 3;
+    ctx.strokeRect(hitter.x, hitter.y, hitter.width, hitter.height);
 }
