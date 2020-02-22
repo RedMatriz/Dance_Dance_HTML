@@ -66,7 +66,6 @@ function initiate(keys) {
     ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
 }
 
-
 function addListeners() {
     document.addEventListener("keyup", function (event) {
         if (event.key === "b" && start) {
@@ -184,4 +183,18 @@ function drawHitter(hitter, ctx) {
     }
     ctx.lineWidth = 3;
     ctx.strokeRect(hitter.x, hitter.y, hitter.width, hitter.height);
+}
+
+function readTextFile(file) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status === 0) {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    };
+    rawFile.send(null);
 }
