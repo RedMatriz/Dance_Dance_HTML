@@ -8,30 +8,43 @@
 
 </head>
 <body>
-<audio hidden id="player" src="../musicdata/Giornos_Theme.wav"></audio>
-<canvas id="game" width="1280" height="720">
-</canvas>
-<script>
-    var keydata = [{
-        key: "s",
-        color:"#4fbfff",
-    }, {
-        key: "d",
-        color:"#55ff71",
-    }, {
-        key: "f",
-        color:"#ff6c5e",
-    }, {
-        key: "j",
-        color:"#ff6c5e",
-    }, {
-        key: "k",
-        color:"#55ff71",
-    }, {
-        key: "l",
-        color:"#4fbfff",
-    }];
-    initiate(keydata);
-</script>
+
+<div class="playcanvas">
+    <audio hidden id="player" src="../musicdata/Giornos_Theme.wav"></audio>
+    <canvas id="game" width="1280" height="720"></canvas>
+    <script>
+        var keydata = [{
+            key: "s",
+            color: "#4fbfff",
+        }, {
+            key: "d",
+            color: "#55ff71",
+        }, {
+            key: "f",
+            color: "#ff6c5e",
+        }, {
+            key: " ",
+            color: "#fbff71",
+        }, {
+            key: "j",
+            color: "#ff6c5e",
+        }, {
+            key: "k",
+            color: "#55ff71",
+        }, {
+            key: "l",
+            color: "#4fbfff",
+        }];
+        initiate(keydata, "Aleph-0", 3);
+    </script>
+</div>
+<div class="pausemenubg fade" id="pausemenubg" hidden></div>
+<div class="pausemenu fadefull" id="pausemenu" hidden>
+    <h1>This is a test</h1>
+    <!--    needs 3 options, -->
+    <!--    resume-->
+    <!--    restart-->
+    <!--    main menu-->
+</div>
 </body>
 </html>

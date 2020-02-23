@@ -7,7 +7,7 @@ body {
 .header {
     background-color: #0070d3;
     overflow: hidden;
-    position: fixed;
+    position: sticky;
     width: 100%;
     top: 0;
 }
@@ -20,7 +20,6 @@ body {
 }
 
 .showcase {
-    margin-top: 74px;
     width: 100%;
     height: auto;
     background-color: #1f1f1f;

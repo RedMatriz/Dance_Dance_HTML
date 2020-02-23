@@ -8,7 +8,7 @@ var hitters = [];
 var blocks = [];
 const hitteroffset = 10;
 const hitterheight = 30;
-const fallrate = 4;
+const fallrate = 2;
 
 class BlockTime {
     constructor(time, col) {
@@ -42,7 +42,8 @@ class Hitter {
     }
 }
 
-function initiate(kdata) {
+function initiate(kdata, map) {
+    document.getElementById("player").src = "../musicdata/" + map + ".wav";
     keydata = kdata;
     canvas = document.getElementById("game");
     ctx = canvas.getContext("2d");
@@ -74,8 +75,9 @@ function makeTextFile(text) {
 }
 
 function addInputListeners() {
-    for (let i = 0; i < keydata.length; i++) {
-        document.addEventListener("keydown", function (event) {
+
+    document.addEventListener("keydown", function (event) {
+        for (let i = 0; i < keydata.length; i++) {
             if (event.key === keydata[i].key) {
                 hitters[i].active = true;
                 if (!start) {
@@ -86,13 +88,15 @@ function addInputListeners() {
                     blocks[i].push(new Block(hitters[i].x, hitters[i].y + hitterheight, 0, fallrate, hitters[i].width, -hitters[i].height));
                 }
             }
-        });
-        document.addEventListener("keyup", function (event) {
+        }
+    });
+    document.addEventListener("keyup", function (event) {
+        for (let i = 0; i < keydata.length; i++) {
             if (event.key === keydata[i].key) {
                 hitters[i].active = false;
             }
-        });
-    }
+        }
+    });
 }
 
 function addControlListeners() {
@@ -122,7 +126,7 @@ function addControlListeners() {
 }
 
 function startRefresh() {
-    const timer = setInterval(uFrame, 10);
+    const timer = setInterval(uFrame, 5);
 }
 
 function uFrame() {
@@ -133,7 +137,7 @@ function uFrame() {
         try {
             ctx.fillStyle = keydata[i].color;
             drawColumn(blocks[i]);
-        }catch (e) {
+        } catch (e) {
         }
     }
 }

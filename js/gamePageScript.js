@@ -1,18 +1,26 @@
-var timecount = 0;
+// var timecount = 0,
+//     timekeeper = 0;
 var score = 0;
+var combo = 0,
+    combobroken = false;
 var timer;
-var start = true;
+var start = true,
+    paused = false,
+    ignorepress = false;
 var canvas;
 var ctx;
 var starttime;
+
 const fallrate = 5;
 const blockwidth = 200;
 const hitterheight = 30;
 const hitteroffset = 10;
+const timeout = 10;
+const blockoffset = 20;
 var blocks = [];
 var hitters = [];
-var updated = [];
 var keydata = [];
+var timings = [];
 
 
 class Block {
@@ -39,7 +47,13 @@ class Hitter {
     }
 }
 
-function initiate(keys) {
+function initiate(keys, map, difficulty) {
+    document.getElementById("player").src = "../musicdata/" + map + ".wav";
+    let temparr = readTextFile("../timingdata/" + map + "_Timings" + difficulty + ".btm").split(",");
+    for (let i = 0; i < temparr.length; i++) {
+        let tempdob = temparr[i].split(":");
+        timings[i] = [parseInt(tempdob[0]), parseFloat(tempdob[1])];
+    }
     keydata = keys;
     canvas = document.getElementById("game");
     ctx = canvas.getContext("2d");
@@ -54,6 +68,18 @@ function initiate(keys) {
             false,
             false));
         blocks.push([]);
+    }
+    for (let i = 0; i < timings.length; i++) {
+        blocks[timings[i][0]].push(new Block(
+            window.innerWidth / (keydata.length + 2) * (timings[i][0] + 1) + (window.innerWidth / (keydata.length + 2) / 2 - blockwidth / 2),
+            -blockoffset - fallrate - timings[i][1] * 1000 / timeout * fallrate,
+            0,
+            fallrate,
+            blockwidth,
+            -50,
+            true,
+            false
+        ));
     }
     addListeners();
     //background
@@ -72,15 +98,28 @@ function addListeners() {
             startGame();
             start = false;
         }
+        if (event.key === "Escape") {
+            paused = !paused;
+            document.getElementById("pausemenu").hidden = !paused;
+            document.getElementById("pausemenubg").hidden = !paused;
+            ignorepress = paused;
+            if (paused) {
+                document.getElementById("player").pause();
+                clearInterval(timer);
+            } else {
+                document.getElementById("player").play();
+                timer = setInterval(uGame, timeout);
+            }
+        }
     });
     for (let i = 0; i < keydata.length; i++) {
         document.addEventListener("keydown", function (event) {
-            if (event.key === keydata[i].key) {
+            if (event.key === keydata[i].key && !ignorepress) {
                 hitters[i].active = true;
             }
         });
         document.addEventListener("keyup", function (event) {
-            if (event.key === keydata[i].key) {
+            if (event.key === keydata[i].key && !ignorepress) {
                 hitters[i].active = false;
                 hitters[i].updated = false;
             }
@@ -90,14 +129,12 @@ function addListeners() {
 
 function startGame() {
     starttime = Date.now();
-    timer = setInterval(uGame, 10);
+    timer = setInterval(uGame, timeout);
     var multiplier = (ctx.canvas.height - hitteroffset - hitterheight) / fallrate;
     setTimeout(function () {
         document.getElementById("player").play();
-    }, multiplier * 10);
+    }, multiplier * timeout);
 }
-
-var timekeeper = 0;
 
 function uGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -106,34 +143,21 @@ function uGame() {
     ctx.fillStyle = "#adadad";
     ctx.font = "30px Ariel";
     ctx.fillText("Score: " + score, 10, 50, window.innerWidth / 8);
-    timecount += 1;
-    timekeeper += 1;
-    const currenttime = Date.now() - starttime;
-    if (timecount % 46 <= 0) {
-        const loc = (Math.random() * (keydata.length - 1)).toFixed(0);
-        blocks[loc].push(new Block(
-            window.innerWidth / (keydata.length + 2) * loc + window.innerWidth / (keydata.length + 2) + (window.innerWidth / (keydata.length + 2) / 2 - blockwidth / 2),
-            0,
-            0,
-            fallrate,
-            blockwidth,
-            -50,
-            true,
-            false
-        ));
+    if (combobroken) {
+        combo = 0;
+        combobroken = false;
     }
-    if (timekeeper === 10) {
-        timekeeper = 0;
-        timecount += 1;
-    }
+    if (combo !== 0)
+        ctx.fillText(combo + "x", 10, 80, window.innerWidth / 8);
     for (let i = 0; i < keydata.length; i++) {
         for (let j = 0; j < blocks[i].length; j++) {
             if (hitters[i].active) {
                 if (!hitters[i].updated) {
                     hitters[i].updated = true;
-                    if (blocks[i][j].y > canvas.height - 50) {
+                    if (blocks[i][j].y > canvas.height - 50 && blocks[i][j].enabled) {
                         if (!blocks[i][j].ishold) {
-                            score += 30;
+                            score += 30 + Math.round(score * combo / 1000);
+                            combo += 1;
                             blocks[i][j].enabled = false;
                         }
                     }
@@ -157,10 +181,19 @@ function uGame() {
         ctx.fillStyle = "#000000";
         ctx.strokeStyle = "#adadad";
     }
+    //timing related stuff
+    // timecount += 1;
+    // timekeeper += 1;
+    // if (timekeeper === 10) {
+    //     timekeeper = 0;
+    //     timecount += 1;
+    // }
 }
 
 function drawColumn(arr, ctx) {
     if (arr[0].y + arr[0].height > window.innerHeight) {
+        if (arr[0].enabled)
+            combobroken = true;
         arr.splice(0, 1);
     }
     var temp = ctx.fillStyle;
@@ -187,14 +220,15 @@ function drawHitter(hitter, ctx) {
 
 function readTextFile(file) {
     var rawFile = new XMLHttpRequest();
+    var allText = "";
     rawFile.open("GET", file, false);
     rawFile.onreadystatechange = function () {
         if (rawFile.readyState === 4) {
             if (rawFile.status === 200 || rawFile.status === 0) {
-                var allText = rawFile.responseText;
-                alert(allText);
+                allText = rawFile.responseText;
             }
         }
     };
     rawFile.send(null);
+    return allText;
 }
