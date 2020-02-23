@@ -1,30 +1,33 @@
-// var timecount = 0,
-//     timekeeper = 0;
 var score = 0;
 var combo = 0,
     combobroken = false;
-var timer;
+var timer, starter;
 var start = true,
     paused = false,
-    ignorepress = false;
+    ignorepress = false,
+    nodelay = true;
 var canvas;
 var ctx;
 var starttime;
-
+var mapName;
+var delay = 0;
 const fallrate = 5;
 const blockwidth = 200;
 const hitterheight = 30;
 const hitteroffset = 10;
 const timeout = 10;
-const blockoffset = 20;
+const blockoffset = -hitterheight - hitteroffset;
+const fade = 0.5;
+const delayoffset = 0;
 var blocks = [];
 var hitters = [];
 var keydata = [];
 var timings = [];
+var sound;
 
 
 class Block {
-    constructor(x, y, xchange, ychange, width, height, enabled, type) {
+    constructor(x, y, xchange, ychange, width, height, enabled, type, time) {
         this.x = x;
         this.y = y;
         this.xchange = xchange;
@@ -33,6 +36,7 @@ class Block {
         this.height = height;
         this.enabled = enabled;
         this.ishold = type;
+        this.time = time;
     }
 }
 
@@ -48,7 +52,9 @@ class Hitter {
 }
 
 function initiate(keys, map, difficulty) {
-    document.getElementById("player").src = "../musicdata/" + map + ".wav";
+    mapName = map;
+    document.getElementById("bgdecor").src = "../resources/" + map + "_bgdecor.mp4";
+    sound = new Audio("../musicdata/" + map + ".wav");
     let temparr = readTextFile("../timingdata/" + map + "_Timings" + difficulty + ".btm").split(",");
     for (let i = 0; i < temparr.length; i++) {
         let tempdob = temparr[i].split(":");
@@ -69,16 +75,21 @@ function initiate(keys, map, difficulty) {
             false));
         blocks.push([]);
     }
+    if (nodelay && 0 < ctx.canvas.height + blockoffset - timings[0][1] * 1000 / timeout * fallrate) {
+        nodelay = false;
+        delay = (ctx.canvas.height + blockoffset - timings[0][1] * 1000 / timeout * fallrate) / fallrate + delayoffset;
+    }
     for (let i = 0; i < timings.length; i++) {
         blocks[timings[i][0]].push(new Block(
             window.innerWidth / (keydata.length + 2) * (timings[i][0] + 1) + (window.innerWidth / (keydata.length + 2) / 2 - blockwidth / 2),
-            -blockoffset - fallrate - timings[i][1] * 1000 / timeout * fallrate,
+            ctx.canvas.height + blockoffset - (timings[i][1] * 1000 / timeout + delay) * fallrate,
             0,
             fallrate,
             blockwidth,
             -50,
             true,
-            false
+            false,
+            timings[i][1]
         ));
     }
     addListeners();
@@ -103,13 +114,37 @@ function addListeners() {
             document.getElementById("pausemenu").hidden = !paused;
             document.getElementById("pausemenubg").hidden = !paused;
             ignorepress = paused;
-            if (paused) {
-                document.getElementById("player").pause();
-                clearInterval(timer);
-            } else {
-                document.getElementById("player").play();
-                timer = setInterval(uGame, timeout);
-            }
+            if (!start)
+                if (paused) {
+
+                    sound.pause();
+                    document.getElementById("bgdecor").pause();
+                    if (!nodelay) {
+                        clearInterval(timer);
+                        clearTimeout(starter)
+                    }
+                } else {
+                    if (nodelay) {
+                        sound.play();
+                        document.getElementById("bgdecor").play();
+                    } else {
+                        timer = setInterval(uGame, timeout);
+                        let largest = 0;
+                        for (let i = 0; i < keydata.length; i++) {
+                            try {
+                                if (blocks[i][0].y > largest)
+                                    largest = blocks[i][0].y;
+                            } catch (e) {
+                            }
+                        }
+                        delay = (canvas.height + blockoffset - largest) / fallrate + delayoffset;
+                        starter = setTimeout(function () {
+                            sound.play();
+                            document.getElementById("bgdecor").play();
+                            nodelay = true;
+                        }, delay * timeout);
+                    }
+                }
         }
     });
     for (let i = 0; i < keydata.length; i++) {
@@ -130,15 +165,16 @@ function addListeners() {
 function startGame() {
     starttime = Date.now();
     timer = setInterval(uGame, timeout);
-    var multiplier = (ctx.canvas.height - hitteroffset - hitterheight) / fallrate;
-    setTimeout(function () {
-        document.getElementById("player").play();
-    }, multiplier * timeout);
+    starter = setTimeout(function () {
+        sound.play();
+        document.getElementById("bgdecor").play();
+        nodelay = true;
+    }, delay * timeout);
 }
 
 function uGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "rgba(0, 0, 0, " + fade + ")";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#adadad";
     ctx.font = "30px Ariel";
@@ -149,6 +185,12 @@ function uGame() {
     }
     if (combo !== 0)
         ctx.fillText(combo + "x", 10, 80, window.innerWidth / 8);
+    if (nodelay)
+        for (let i = 0; i < blocks.length; i++) {
+            for (let j = 0; j < blocks[i].length; j++) {
+                blocks[i][j].y = ctx.canvas.height + blockoffset - (blocks[i][j].time - sound.currentTime) * 1000 / timeout * fallrate;
+            }
+        }
     for (let i = 0; i < keydata.length; i++) {
         for (let j = 0; j < blocks[i].length; j++) {
             if (hitters[i].active) {
@@ -181,13 +223,6 @@ function uGame() {
         ctx.fillStyle = "#000000";
         ctx.strokeStyle = "#adadad";
     }
-    //timing related stuff
-    // timecount += 1;
-    // timekeeper += 1;
-    // if (timekeeper === 10) {
-    //     timekeeper = 0;
-    //     timecount += 1;
-    // }
 }
 
 function drawColumn(arr, ctx) {
@@ -198,7 +233,8 @@ function drawColumn(arr, ctx) {
     }
     var temp = ctx.fillStyle;
     for (let j = 0; j < arr.length; j++) {
-        arr[j].y += arr[j].ychange;
+        if (!nodelay)
+            arr[j].y += arr[j].ychange;
         arr[j].x += arr[j].xchange;
         if (!arr[j].enabled)
             ctx.fillStyle = "#505050";

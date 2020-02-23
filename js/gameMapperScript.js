@@ -9,6 +9,7 @@ var blocks = [];
 const hitteroffset = 10;
 const hitterheight = 30;
 const fallrate = 2;
+var sound;
 
 class BlockTime {
     constructor(time, col) {
@@ -43,6 +44,7 @@ class Hitter {
 }
 
 function initiate(kdata, map) {
+    sound = new Audio("../musicdata/" + map + ".wav");
     document.getElementById("player").src = "../musicdata/" + map + ".wav";
     keydata = kdata;
     canvas = document.getElementById("game");
@@ -81,7 +83,7 @@ function addInputListeners() {
             if (event.key === keydata[i].key) {
                 hitters[i].active = true;
                 if (!start) {
-                    let time = document.getElementById("player").currentTime;
+                    let time = sound.currentTime;
                     let block = new BlockTime(time, i);
                     times.push(block);
                     document.getElementById("display").innerText = block.toString();
@@ -104,13 +106,13 @@ function addControlListeners() {
         if (event.key === "b" && start) {
             start = false;
             startRefresh();
-            document.getElementById("player").play();
+            sound.play();
         }
     });
     document.addEventListener("keyup", function (event) {
         if (event.key === "e") {
             var link = document.getElementById("output");
-            document.getElementById("player").pause();
+            sound.pause();
             link.href = makeTextFile(times);
             link.style.display = 'block';
         }
@@ -119,8 +121,8 @@ function addControlListeners() {
         if (event.key === "r") {
             start = true;
             times = [];
-            document.getElementById("player").currentTime = 0;
-            document.getElementById("player").pause();
+            sound.currentTime = 0;
+            sound.pause();
         }
     });
 }
@@ -130,6 +132,7 @@ function startRefresh() {
 }
 
 function uFrame() {
+    document.getElementById("player").currentTime = sound.currentTime;
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < keydata.length; i++) {
