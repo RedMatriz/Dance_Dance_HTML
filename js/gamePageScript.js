@@ -19,6 +19,7 @@ const timeout = 10;
 const blockoffset = -hitterheight - hitteroffset;
 const fade = 0.5;
 const delayoffset = 0;
+const combomultiplier = .0001;
 var blocks = [];
 var hitters = [];
 var keydata = [];
@@ -198,7 +199,8 @@ function uGame() {
                     hitters[i].updated = true;
                     if (blocks[i][j].y > canvas.height - 50 && blocks[i][j].enabled) {
                         if (!blocks[i][j].ishold) {
-                            score += 30 + Math.round(score * combo / 1000);
+                            score += 30;
+                            score += Math.round(score * combo * combomultiplier);
                             combo += 1;
                             blocks[i][j].enabled = false;
                         }
