@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dance Dance Mapper</title>
+    <link rel="stylesheet" type="text/css" href="../css/gameMapperStyle.css">
+    <script src="../js/gameMapperScript.js"></script>
+</head>
+<body>
+<div>
+    <audio id="player" controls src="../musicdata/Giornos_Theme.wav"></audio>
+    <h1 id="display">Readout</h1>
+    <a download="btmap.btm" id="output">Download file</a>
+</div>
+<canvas id="game" width="1280" height="720">
+</canvas>
+<script>
+    var keydata = [{
+        key: "s",
+        color: "#4fbfff",
+    }, {
+        key: "d",
+        color: "#55ff71",
+    }, {
+        key: "f",
+        color: "#ff6c5e",
+    }, {
+        key: " ",
+        color: "#fbff71",
+    }, {
+        key: "j",
+        color: "#ff6c5e",
+    }, {
+        key: "k",
+        color: "#55ff71",
+    }, {
+        key: "l",
+        color: "#4fbfff",
+    }];
+    initiate(keydata, "Aleph-0");
+</script>
+</body>
+</html>
