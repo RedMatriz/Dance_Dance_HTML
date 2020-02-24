@@ -1,0 +1,52 @@
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+    background-color: #0070d3;
+    overflow: hidden;
+    position: sticky;
+    width: 100%;
+    top: 0;
+}
+
+.header h1 {
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    font-size: 30px;
+}
+
+.showcase {
+    width: 100%;
+    height: auto;
+    background-color: #1f1f1f;
+
+}
+
+.showcase img {
+    margin: 0 16%;
+    width: 68%;
+    height: auto;
+}
+
+.description {
+    margin: 0;
+    width: 100%;
+    background-color: #c3c3c3;
+    color: #000000;
+}
+
+.description h1 {
+    margin: auto 30%;
+    width: 40%;
+    word-break: break-all;
+}
+
+.description p {
+    margin: 0 30%;
+    width: 40%;
+    word-break: break-all;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title id="title">Dance Dance HTML</title>
+    <link rel="stylesheet" type="text/css" href="../css/gamePageStyle.css">
+    <script src="../js/gamePageScript.js"></script>
+
+</head>
+<body>
+<div class="bgdecor">
+    <video id="bgdecor" src="" muted></video>
+</div>
+<div class="playcanvas">
+    <canvas id="game" width="1280" height="720"></canvas>
+    <script>
+        var keydata = [{
+            key: "s",
+            color: "#4fbfff",
+        }, {
+            key: "d",
+            color: "#55ff71",
+        }, {
+            key: "f",
+            color: "#ff6c5e",
+        }, {
+            key: " ",
+            color: "#fbff71",
+        }, {
+            key: "j",
+            color: "#ff6c5e",
+        }, {
+            key: "k",
+            color: "#55ff71",
+        }, {
+            key: "l",
+            color: "#4fbfff",
+        }];
+        initiate(keydata, "Aleph-0", 4);
+    </script>
+</div>
+<div class="pausemenubg fade" id="pausemenubg" hidden></div>
+<div class="pausemenu fadefull" id="pausemenu" hidden>
+    <h1>Paused</h1>
+    <h1>(There Is Currently No Menu Yet)</h1>
+    <!--    needs 3 options, -->
+    <!--    resume-->
+    <!--    restart-->
+    <!--    main menu-->
+</div>
+</body>
+</html>
