@@ -1,6 +1,7 @@
 body {
     margin: 0;
 }
+
 .bgdecor {
     margin: 0;
     width: 100%;
@@ -9,7 +10,8 @@ body {
     overflow: hidden;
     background-color: black;
 }
-.bgdecor video{
+
+.bgdecor video {
     display: block;
     width: auto;
     height: 100%;
@@ -32,6 +34,10 @@ body {
 
 .pausemenu h1 {
     color: white;
+    text-align: center;
+    vertical-align: center;
+    margin: auto auto;
+
 }
 
 .pausemenubg {
@@ -57,8 +63,8 @@ body {
     }
 }
 
-.fade {
-    animation-name: fade;
+.fadefull {
+    animation-name: fadefull;
     animation-duration: .4s;
 }
 

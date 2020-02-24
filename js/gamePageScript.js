@@ -54,6 +54,7 @@ class Hitter {
 
 function initiate(keys, map, difficulty) {
     mapName = map;
+    document.getElementById("title").innerText = "Dance Dance HTML: " + map;
     document.getElementById("bgdecor").src = "../resources/" + map + "_bgdecor.mp4";
     sound = new Audio("../musicdata/" + map + ".wav");
     let temparr = readTextFile("../timingdata/" + map + "_Timings" + difficulty + ".btm").split(",");
