@@ -57,6 +57,7 @@ function initiate(keys, map, difficulty) {
     document.getElementById("title").innerText = "Dance Dance HTML: " + map;
     document.getElementById("bgdecor").src = "../resources/" + map + "_bgdecor.mp4";
     sound = new Audio("../musicdata/" + map + ".wav");
+    sound.load();
     let temparr = readTextFile("../timingdata/" + map + "_Timings" + difficulty + ".btm").split(",");
     for (let i = 0; i < temparr.length; i++) {
         let tempdob = temparr[i].split(":");

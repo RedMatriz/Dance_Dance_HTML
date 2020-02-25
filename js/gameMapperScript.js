@@ -1,16 +1,22 @@
-var canvas, ctx;
-var file;
-var times = [];
-var start = true;
-var textFile = null;
-var keydata = [];
-var hitters = [];
-var blocks = [];
-const hitteroffset = 10;
-const hitterheight = 30;
-const fallrate = 2;
-var sound;
+//file and output related stuff
+let times = [],
+    start = true,
+    textFile = null;
+//key related stuff
+let keydata = [];
+const hitters = [],
+    blocks = [];
+//canvas related stuff
+let canvas = null,
+    ctx = null;
+const hitteroffset = 10,
+    hitterheight = 30,
+    fallrate = 2;
+//audio related stuff
+let sound = null;
 
+
+//classes
 class BlockTime {
     constructor(time, col) {
         this.time = time;
@@ -43,8 +49,10 @@ class Hitter {
     }
 }
 
+//functions
 function initiate(kdata, map) {
     sound = new Audio("../musicdata/" + map + ".wav");
+    sound.load();
     document.getElementById("player").src = "../musicdata/" + map + ".wav";
     keydata = kdata;
     canvas = document.getElementById("game");
