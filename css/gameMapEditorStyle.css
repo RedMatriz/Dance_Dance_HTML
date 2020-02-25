@@ -1,0 +1,32 @@
+body {
+    margin: 0;
+}
+
+canvas {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+
+div {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.bgdecor {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+    background-color: black;
+}
+
+.bgdecor video {
+    display: block;
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+}

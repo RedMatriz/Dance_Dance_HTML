@@ -3,8 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Dance Dance Editor</title>
+    <link rel="stylesheet" type="text/css" href="../css/gameMapEditorStyle.css">
+    <script src="../js/gameMapEditorScript.js"></script>
 </head>
 <body>
-
+<div class="bgdecor" id="videoholder">
+    <video id="bgvideo" src="" muted></video>
+</div>
+<div class="editor-main">
+    <canvas id="editor-canvas" width="1280" height="720"></canvas>
+    <script>
+        let data = [{
+            key: "s",
+            color: "#4fbfff",
+        }, {
+            key: "d",
+            color: "#55ff71",
+        }, {
+            key: "f",
+            color: "#ff6c5e",
+        }, {
+            key: " ",
+            color: "#fbff71",
+        }, {
+            key: "j",
+            color: "#ff6c5e",
+        }, {
+            key: "k",
+            color: "#55ff71",
+        }, {
+            key: "l",
+            color: "#4fbfff",
+        }];
+        initiate(data, "Aleph-0", 2);
+    </script>
+</div>
 </body>
 </html>
