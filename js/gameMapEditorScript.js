@@ -1,3 +1,4 @@
+let mapName = null;
 //audio playback related stuff
 let sound = null,
     position = 0,
@@ -8,24 +9,31 @@ let sound = null,
 //keypress related stuff
 let keydata = null;
 //mouseinteraction related stuff
-const mousepos = [0, 0];
+const mousepos = [0, 0],
+    downpos = [0, 0],
+    uppos = [0, 0];
 let mousedown = false,
-    scrollmultiplier = 30;
+    scrollmultiplier = 30,
+    selectedBlock = null,
+    selectedBlockTime = null;
 //canvas related stuff
 let ctx = null,
     canvas = null,
     hitters = [],
     scale = 1,
     showBG = true,
-    fade = 0.3;
+    fade = 0.3,
+    blockrenderindex = [];
 const hitterheight = 30,
     hitteroffset = 10;
 //timing related stuff
-let timer = null;
+let timer = null,
+    autosave = null;
 const timeout = 10,
     fallrate = 5;
 //file io related stuff
-let blocks = [];
+let blocks = [],
+    textFile = null;
 
 class Block {
     constructor(x, y, xchange, ychange, width, height, time) {
@@ -56,6 +64,7 @@ function initiate(kdata, map, difficulty) {
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     //load in the files
+    mapName = map;
     keydata = kdata;
     document.getElementById("bgvideo").src = "../resources/" + map + "_bgdecor.mp4";
     document.getElementById("bgvideo").load();
@@ -103,6 +112,31 @@ function initiate(kdata, map, difficulty) {
         if (waveform != null) {
             clearInterval(temp);
             timer = setInterval(update, timeout);
+            autosave = setInterval(function () {
+                let output = "", indecies = [], indmax = [], notmet = true;
+                for (let i = 0; i < keydata.length; i++) {
+                    indecies.push(0);
+                    indmax.push(blocks[i].length)
+                }
+                do {
+                    notmet = false;
+                    let smallest = sound.duration;
+                    let smalindex = 0;
+                    for (let i = 0; i < blocks.length; i++) {
+                        if (indecies[i] < blocks[i].length && parseFloat(blocks[i][indecies[i]].time) <= smallest) {
+                            smallest = parseFloat(blocks[i][indecies[i]].time);
+                            smalindex = i;
+                        }
+                        if (!(indecies[i] >= indmax[i]))
+                            notmet = true;
+                    }
+                    if (notmet) {
+                        output += smalindex + ":" + blocks[smalindex][indecies[smalindex]].time + ",";
+                        indecies[smalindex] += 1;
+                    }
+                } while (notmet);
+                localStorage.setItem("map", makeTextFile(output.substr(0, output.length-1)));
+            }, 60000);
         }
     });
 
@@ -121,15 +155,53 @@ function addListeners() {
                 document.getElementById("bgvideo").play();
             }
         }
+        if (event.key === "o") {
+            let output = "";
+            let indecies = [];
+            let indmax = [];
+            let notmet = true;
+            for (let i = 0; i < keydata.length; i++) {
+                indecies.push(0);
+                indmax.push(blocks[i].length)
+            }
+            do {
+                notmet = false;
+                let smallest = sound.duration;
+                let smalindex = 0;
+                for (let i = 0; i < blocks.length; i++) {
+                    if (indecies[i] < blocks[i].length && parseFloat(blocks[i][indecies[i]].time) <= smallest) {
+                        smallest = parseFloat(blocks[i][indecies[i]].time);
+                        smalindex = i;
+                    }
+                    if (!(indecies[i] >= indmax[i]))
+                        notmet = true;
+                }
+                if (notmet) {
+                    output += smalindex + ":" + blocks[smalindex][indecies[smalindex]].time + ",";
+                    indecies[smalindex] += 1;
+                }
+            } while (notmet);
+            localStorage.setItem("map", makeTextFile(output.substr(0, output.length-1)));
+            window.open("redirect.html", '_blank');
+        }
     });
-    document.addEventListener("mousemove", function (event) {
+    canvas.addEventListener("mousemove", function (event) {
         mousepos[0] = event.x;
         mousepos[1] = event.y;
     });
     document.addEventListener("mousedown", function (event) {
+        downpos[0] = mousepos[0];
+        downpos[1] = mousepos[1];
+        selectedBlock = getSelectedBlock(downpos);
+        if (selectedBlock != null)
+            selectedBlockTime = selectedBlock.time;
         mousedown = true;
     });
     document.addEventListener("mouseup", function (event) {
+        uppos[0] = mousepos[0];
+        uppos[1] = mousepos[1];
+        selectedBlock = null;
+        selectedBlockTime = null;
         toggleBG();
         mousedown = false;
     });
@@ -185,6 +257,13 @@ function update() {
         sound.currentTime = position / 1000 * timeout / fallrate;
         document.getElementById("bgvideo").currentTime = position / 1000 * timeout / fallrate;
     }
+    if (mousedown) {
+        if (selectedBlock != null) {
+            selectedBlock.time = (downpos[1] - mousepos[1]) / 1000 * timeout / fallrate + selectedBlockTime;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, selectedBlock.y, selectedBlock.x + selectedBlock.width, -5);
+        }
+    }
     for (let i = 0; i < blocks.length; i++) {
         for (let j = 0; j < blocks[i].length; j++) {
             blocks[i][j].y = canvas.height - (blocks[i][j].time - sound.currentTime) * 1000 / timeout * fallrate;
@@ -225,7 +304,6 @@ function update() {
     ctx.closePath();
     ctx.fillStyle = "#6ca3ff";
     ctx.strokeStyle = "#6ca3ff";
-    // ctx.stroke();
     ctx.fill();
 
 }
@@ -255,7 +333,31 @@ function readTextFile(file) {
     return allText;
 }
 
+function makeTextFile(text) {
+    var data = new Blob([text], {
+        type: 'text/plain'
+    });
+    if (textFile !== null)
+        window.URL.revokeObjectURL(textFile);
+    textFile = window.URL.createObjectURL(data);
+    return textFile;
+}
+
 function toggleBG() {
     document.getElementById("videoholder").hidden = showBG;
     showBG = !showBG;
+}
+
+function getSelectedBlock(pos) {
+    for (let i = 0; i < blocks.length; i++) {
+        for (let j = 0; j < blocks[i].length; j++) {
+            let cur = blocks[i][j];
+            if (cur.x < pos[0] && cur.x + cur.width > pos[0]) {
+                if (cur.y > pos[1] && cur.y + cur.height < pos[1]) {
+                    return cur;
+                }
+            }
+        }
+    }
+    return null;
 }
