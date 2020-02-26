@@ -202,7 +202,7 @@ function addListeners() {
         uppos[1] = mousepos[1];
         selectedBlock = null;
         selectedBlockTime = null;
-        toggleBG();
+        // toggleBG();
         mousedown = false;
     });
     document.addEventListener("wheel", function (event) {
