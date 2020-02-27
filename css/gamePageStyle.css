@@ -30,14 +30,81 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
+    font-size: 70px;
+    user-select: none;
 }
 
 .pausemenu h1 {
     color: white;
+    background-color: #0070d3;
     text-align: center;
-    vertical-align: center;
-    margin: auto auto;
+    position: fixed;
+    margin-top: 3%;
+    width: 100%;
+}
 
+.menu {
+    color: white;
+    user-select: none;
+    text-align: center;
+    font-size: 30px;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin-top: 18%;
+}
+
+.menu #resume {
+    background-color: #67971c;
+    border-radius: 20px;
+    position: fixed;
+    margin: 0 45%;
+    padding: 20px 0;
+    width: 10%;
+}
+
+.menu #restart {
+    background-color: #8c1717;
+    border-radius: 20px;
+    position: fixed;
+    margin: 5% 45%;
+    padding: 20px 0;
+    width: 10%;
+}
+
+.menu #options {
+    background-color: #3e7ba5;
+    border-radius: 20px;
+    position: fixed;
+    padding: 20px 0;
+    margin: 10% 44%;
+    width: 12%;
+}
+
+.menu #mainmenu {
+    background-color: #3e4f8a;
+    border-radius: 20px;
+    position: fixed;
+    margin: 15% 42.5%;
+    padding: 20px 0;
+    width: 15%;
+
+}
+
+.menu #resume:hover {
+    background-color: #92c920;
+}
+
+.menu #restart:hover {
+    background-color: #bc1919;
+}
+
+.menu #options:hover {
+    background-color: #5ebbfc;
+}
+
+.menu #mainmenu:hover {
+    background-color: #5a79d0;
 }
 
 .pausemenubg {

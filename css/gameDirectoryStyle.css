@@ -10,6 +10,7 @@ body {
     position: sticky;
     width: 100%;
     top: 0;
+    user-select: none;
 }
 
 .header h1 {
@@ -23,7 +24,7 @@ body {
     width: 100%;
     height: auto;
     background-color: #1f1f1f;
-
+    user-select: none;
 }
 
 .showcase img {

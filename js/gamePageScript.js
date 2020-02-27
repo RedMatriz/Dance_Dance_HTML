@@ -10,6 +10,7 @@ var canvas;
 var ctx;
 var starttime;
 var mapName;
+var diff = 0;
 var delay = 0;
 const fallrate = 5;
 const blockwidth = 200;
@@ -54,6 +55,7 @@ class Hitter {
 
 function initiate(keys, map, difficulty) {
     mapName = map;
+    diff = difficulty;
     document.getElementById("title").innerText = "Dance Dance HTML: " + map;
     document.getElementById("bgdecor").src = "../resources/" + map + "_bgdecor.mp4";
     sound = new Audio("../musicdata/" + map + ".wav");
@@ -113,41 +115,7 @@ function addListeners() {
             start = false;
         }
         if (event.key === "Escape") {
-            paused = !paused;
-            document.getElementById("pausemenu").hidden = !paused;
-            document.getElementById("pausemenubg").hidden = !paused;
-            ignorepress = paused;
-            if (!start)
-                if (paused) {
-
-                    sound.pause();
-                    document.getElementById("bgdecor").pause();
-                    if (!nodelay) {
-                        clearInterval(timer);
-                        clearTimeout(starter)
-                    }
-                } else {
-                    if (nodelay) {
-                        sound.play();
-                        document.getElementById("bgdecor").play();
-                    } else {
-                        timer = setInterval(uGame, timeout);
-                        let largest = 0;
-                        for (let i = 0; i < keydata.length; i++) {
-                            try {
-                                if (blocks[i][0].y > largest)
-                                    largest = blocks[i][0].y;
-                            } catch (e) {
-                            }
-                        }
-                        delay = (canvas.height + blockoffset - largest) / fallrate + delayoffset;
-                        starter = setTimeout(function () {
-                            sound.play();
-                            document.getElementById("bgdecor").play();
-                            nodelay = true;
-                        }, delay * timeout);
-                    }
-                }
+            pause();
         }
     });
     for (let i = 0; i < keydata.length; i++) {
@@ -271,4 +239,79 @@ function readTextFile(file) {
     };
     rawFile.send(null);
     return allText;
+}
+
+function pause() {
+    paused = !paused;
+    document.getElementById("pausemenu").hidden = !paused;
+    document.getElementById("pausemenubg").hidden = !paused;
+    ignorepress = paused;
+    if (!start)
+        if (paused) {
+
+            sound.pause();
+            document.getElementById("bgdecor").pause();
+            if (!nodelay) {
+                clearInterval(timer);
+                clearTimeout(starter)
+            }
+        } else {
+            if (nodelay) {
+                sound.play();
+                document.getElementById("bgdecor").play();
+            } else {
+                timer = setInterval(uGame, timeout);
+                let largest = 0;
+                for (let i = 0; i < keydata.length; i++) {
+                    try {
+                        if (blocks[i][0].y > largest)
+                            largest = blocks[i][0].y;
+                    } catch (e) {
+                    }
+                }
+                delay = (canvas.height + blockoffset - largest) / fallrate + delayoffset;
+                starter = setTimeout(function () {
+                    sound.play();
+                    document.getElementById("bgdecor").play();
+                    nodelay = true;
+                }, delay * timeout);
+            }
+        }
+}
+
+function restart() {
+    clearTimeout(timer);
+    clearTimeout(starter);
+    blocks = [];
+    for (let i = 0; i < keydata.length; i++) {
+        blocks.push([]);
+    }
+    for (let i = 0; i < timings.length; i++) {
+        blocks[timings[i][0]].push(new Block(
+            window.innerWidth / (keydata.length + 2) * (timings[i][0] + 1) + (window.innerWidth / (keydata.length + 2) / 2 - blockwidth / 2),
+            ctx.canvas.height + blockoffset - (timings[i][1] * 1000 / timeout + delay) * fallrate,
+            0,
+            fallrate,
+            blockwidth,
+            -50,
+            true,
+            false,
+            timings[i][1]
+        ));
+    }
+    pause();
+    sound.pause();
+    sound.currentTime = 0;
+    document.getElementById("bgdecor").pause();
+    document.getElementById("bgdecor").currentTime = 0;
+    score = 0;
+    combo = 0;
+    uGame();
+    //foreground
+    ctx.font = "30px Ariel";
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1;
+    var textString = "Press B to begin";
+    ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
+    start = true;
 }

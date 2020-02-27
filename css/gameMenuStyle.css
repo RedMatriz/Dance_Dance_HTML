@@ -3,6 +3,7 @@ body {
 }
 
 .header {
+    user-select: none;
     background-color: #0070d3;
     overflow: hidden;
     position: sticky;
