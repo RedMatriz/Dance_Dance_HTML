@@ -1,6 +1,7 @@
 body {
     margin: 0;
     user-select: none;
+    background-color: black;
 }
 
 /*level select section*/
@@ -80,40 +81,22 @@ body {
     display: flex;
 }
 
-/*.sublist {*/
-/*    position: absolute;*/
-/*    border: solid #61e96f;*/
-/*    border-right: none;*/
-/*    border-radius: 10px 0 0 10px;*/
-/*    margin: 0;*/
-/*    width: 100%;*/
-/*    height: 4%;*/
-/*    overflow: hidden;*/
-/*}*/
+#header {
+    background-color: #0070d3;
+    position: fixed;
+    border-bottom-right-radius: 10px;
+    width: 60%;
+    top: 0;
+    user-select: none;
+}
 
-/*.subparent {*/
-/*    float: left;*/
-/*    position: absolute;*/
-/*    width: 100%;*/
-/*    height: 50%;*/
-/*    margin: 0 -1%;*/
-/*    right: 0;*/
-/*    list-style-type: none;*/
-/*}*/
-/*.subparent li{*/
-/*    display: block;*/
-/*    vertical-align: middle;*/
-/*    float: left;*/
-/*}*/
-/*.subparent li h1{*/
-/*    text-align: center;*/
-/*    position: absolute;*/
-/*}*/
-
-/*.subparent::-webkit-scrollbar {*/
-/*    width: 0;*/
-/*    background: transparent;*/
-/*}*/
+#header h1 {
+    color: #f2f2f2;
+    margin-left: 3%;
+    text-align: left;
+    text-decoration: none;
+    font-size: 30px;
+}
 
 /*game section*/
 
@@ -128,19 +111,29 @@ body {
 }
 
 .bgdecor {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    position: fixed;
+    margin: auto;
+    max-width: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     overflow: hidden;
     background-color: black;
 }
 
 .bgdecor video {
-    display: block;
-    width: 100%;
-    height: auto;
     margin: auto;
+    max-width: 100%;
+    height: 100%;
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
 }
 
 .playcanvas {
@@ -257,7 +250,7 @@ body {
 
 .fadein {
     animation-name: fadein;
-    animation-duration: .4s;
+    animation-duration: .3s;
 }
 
 @keyframes fadein {
@@ -271,7 +264,7 @@ body {
 
 .fadeinfull {
     animation-name: fadeinfull;
-    animation-duration: .4s;
+    animation-duration: .3s;
 }
 
 @keyframes fadeinfull {
@@ -285,7 +278,7 @@ body {
 
 .fadeout {
     animation-name: fadeout;
-    animation-duration: .4s;
+    animation-duration: .3s;
 }
 
 @keyframes fadeout {

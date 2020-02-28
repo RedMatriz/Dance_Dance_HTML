@@ -1,17 +1,17 @@
-var score = 0;
-var combo = 0,
+let score = 0,
+    combo = 0,
     combobroken = false;
-var timer, starter;
-var hasstart = true,
+let timer, starter;
+let hasstart = true,
     paused = false,
     ignorepress = false,
     nodelay = true;
-var canvas;
-var ctx;
-var starttime;
-var mapName;
-var diff = 0;
-var delay = 0;
+let canvas,
+    ctx;
+let starttime;
+let mapName,
+    diff = 0,
+    delay = 0;
 const fallrate = 5;
 const blockwidth = 200;
 const hitterheight = 30;
@@ -21,12 +21,12 @@ const blockoffset = -hitterheight - hitteroffset;
 const fade = 0.5;
 const delayoffset = 0;
 const combomultiplier = .0001;
-var levelarray = [];
+let levelarray = [];
 const blocks = [];
-var hitters = [];
-var keydata = [];
-var timings = [];
-var sound;
+let hitters = [];
+let keydata = [];
+let timings = [];
+let sound;
 
 
 class Block {
@@ -106,15 +106,17 @@ function initiate(keys, mapIndex, difficulty) {
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 1;
     var textString = "Press B to begin";
+    ctx.fillText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
     ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
     document.getElementById("levelselectcontainer").addEventListener("webkitAnimationEnd", function a() {
         document.getElementById("levelselectcontainer").hidden = true;
         document.getElementById("levelselectcontainer").classList.remove("fadeout");
         document.getElementById("levelselectcontainer").classList.add("fadeinfull");
-        document.getElementById("gamecontainer").hidden = false;
         document.getElementById("levelselectcontainer").removeEventListener("webkitAnimationEnd", a);
     });
+    document.getElementById("gamecontainer").hidden = false;
     document.getElementById("levelselectcontainer").classList.add("fadeout");
+
 }
 
 function kd(event) {
@@ -330,38 +332,38 @@ function restart() {
 }
 
 function clearInstance() {
-    restart();
-    document.removeEventListener("keydown", kd);
-    document.removeEventListener("keyup", ku);
-    score = 0;
-    combo = 0;
-    combobroken = false;
-    clearInterval(timer);
-    clearInterval(starter);
-    hasstart = true;
-    paused = false;
-    ignorepress = false;
-    nodelay = true;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.getElementById("gamecontainer").addEventListener("webkitAnimationEnd", function a() {
         document.getElementById("gamecontainer").hidden = true;
         document.getElementById("gamecontainer").classList.remove("fadeout");
         document.getElementById("gamecontainer").classList.add("fadeinfull");
-        document.getElementById("levelselectcontainer").hidden = false;
         document.getElementById("gamecontainer").removeEventListener("webkitAnimationEnd", a);
+        restart();
+        document.removeEventListener("keydown", kd);
+        document.removeEventListener("keyup", ku);
+        score = 0;
+        combo = 0;
+        combobroken = false;
+        clearInterval(timer);
+        clearInterval(starter);
+        hasstart = true;
+        paused = false;
+        ignorepress = false;
+        nodelay = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas = null;
+        ctx = null;
+        starttime = null;
+        mapName = "";
+        diff = 0;
+        delay = 0;
+        blocks.splice(0, blocks.length);
+        hitters = [];
+        keydata = [];
+        timings = [];
+        sound = null;
     });
+    document.getElementById("levelselectcontainer").hidden = false;
     document.getElementById("gamecontainer").classList.add("fadeout");
-    canvas = null;
-    ctx = null;
-    starttime = null;
-    mapName = "";
-    diff = 0;
-    delay = 0;
-    blocks.splice(0, blocks.length)
-    hitters = [];
-    keydata = [];
-    timings = [];
-    sound = null;
 }
 
 function loadMaps(datafile) {
@@ -381,10 +383,10 @@ function loadMaps(datafile) {
     let innerelement = "";
     for (let i = 0; i < levelarray.length; i++) {
         innerelement += "<li class='levelbanner' id='lvlid_" + i + "' onmouseup='start(" + i + "," + levelarray[i][2][0] + ")'><h1>" + levelarray[i][0] + "</h1></li>";
+        // TODO: move function to info page
         //loadLevelInfo(" + i + ")
     }
     listparent.innerHTML = innerelement;
-    alert(listparent.innerHTML)
 }
 
 function start(index, diff) {
@@ -418,4 +420,5 @@ function loadLevelInfo(index) {
     for (let j = 0; j < levelarray[index][1].length; j++) {
         innerelement += "<h1>" + levelarray[index][1][j] + "</h1>";
     }
+    // TODO: add info loader
 }
