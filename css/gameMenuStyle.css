@@ -1,9 +1,9 @@
 body {
     margin: 0;
+    user-select: none;
 }
 
 .header {
-    user-select: none;
     overflow: hidden;
     position: fixed;
     width: 100%;
@@ -19,7 +19,6 @@ body {
 }
 
 .menu {
-    user-select: none;
     overflow: hidden;
     position: fixed;
     width: 100%;

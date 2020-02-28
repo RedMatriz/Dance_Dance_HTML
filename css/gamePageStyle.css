@@ -1,5 +1,130 @@
 body {
     margin: 0;
+    user-select: none;
+}
+
+/*level select section*/
+
+.levelselectcontainer {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+    background-color: #000000;
+
+}
+
+.levelselectcontainer #lvlslcbg {
+    margin: auto;
+    max-width: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.levelselectcontainer #levelselectlist {
+    /*background-color: #5a79d0;*/
+    width: 30%;
+    height: 100%;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.levelselectcontainer #levelselectlist #listparent {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0 0;
+    position: absolute;
+    right: 0;
+    list-style-type: none;
+    overflow-y: auto;
+}
+
+#levelselectlist ul::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.levelbanner {
+    display: block;
+    /*border: solid #8c1717;*/
+    background: linear-gradient(180deg, rgb(0, 138, 170) 0%, rgba(9, 9, 121, 0) 30%, rgba(8, 25, 132, 0) 70%, rgb(0, 135, 170) 100%);
+    border-right: none;
+    /*border-radius: 10px 0 0 10px;*/
+    width: 100%;
+    height: 10%;
+    margin: 1% 0;
+    overflow: hidden;
+}
+
+.levelbanner:hover {
+    background: linear-gradient(180deg, rgb(0, 206, 255) 0%, rgba(9, 9, 121, 0) 30%, rgba(8, 25, 132, 0) 70%, rgb(0, 204, 255) 100%);
+}
+
+.levelbanner h1 {
+    color: white;
+    margin: 5%;
+    display: flex;
+}
+
+/*.sublist {*/
+/*    position: absolute;*/
+/*    border: solid #61e96f;*/
+/*    border-right: none;*/
+/*    border-radius: 10px 0 0 10px;*/
+/*    margin: 0;*/
+/*    width: 100%;*/
+/*    height: 4%;*/
+/*    overflow: hidden;*/
+/*}*/
+
+/*.subparent {*/
+/*    float: left;*/
+/*    position: absolute;*/
+/*    width: 100%;*/
+/*    height: 50%;*/
+/*    margin: 0 -1%;*/
+/*    right: 0;*/
+/*    list-style-type: none;*/
+/*}*/
+/*.subparent li{*/
+/*    display: block;*/
+/*    vertical-align: middle;*/
+/*    float: left;*/
+/*}*/
+/*.subparent li h1{*/
+/*    text-align: center;*/
+/*    position: absolute;*/
+/*}*/
+
+/*.subparent::-webkit-scrollbar {*/
+/*    width: 0;*/
+/*    background: transparent;*/
+/*}*/
+
+/*game section*/
+
+.gameontainer {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+    background-color: black;
+    animation: fadeinfull;
 }
 
 .bgdecor {
@@ -13,9 +138,9 @@ body {
 
 .bgdecor video {
     display: block;
-    width: auto;
-    height: 100%;
-    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    margin: auto;
 }
 
 .playcanvas {
@@ -58,18 +183,18 @@ body {
     background-color: #67971c;
     border-radius: 20px;
     position: fixed;
-    margin: 0 45%;
+    margin: 0 42.5%;
     padding: 20px 0;
-    width: 10%;
+    width: 15%;
 }
 
 .menu #restart {
     background-color: #8c1717;
     border-radius: 20px;
     position: fixed;
-    margin: 5% 45%;
+    margin: 5% 42.5%;
     padding: 20px 0;
-    width: 10%;
+    width: 15%;
 }
 
 .menu #options {
@@ -77,15 +202,25 @@ body {
     border-radius: 20px;
     position: fixed;
     padding: 20px 0;
-    margin: 10% 44%;
-    width: 12%;
+    margin: 10% 42.5%;
+    width: 15%;
 }
 
-.menu #mainmenu {
+.menu #levelselect {
     background-color: #3e4f8a;
     border-radius: 20px;
     position: fixed;
     margin: 15% 42.5%;
+    padding: 20px 0;
+    width: 15%;
+
+}
+
+.menu #mainmenu {
+    background-color: #404040;
+    border-radius: 20px;
+    position: fixed;
+    margin: 20% 42.5%;
     padding: 20px 0;
     width: 15%;
 
@@ -103,8 +238,12 @@ body {
     background-color: #5ebbfc;
 }
 
-.menu #mainmenu:hover {
+.menu #levelselect:hover {
     background-color: #5a79d0;
+}
+
+.menu #mainmenu:hover {
+    background-color: #5d5d5d;
 }
 
 .pausemenubg {
@@ -116,12 +255,12 @@ body {
     height: 100%;
 }
 
-.fade {
-    animation-name: fade;
+.fadein {
+    animation-name: fadein;
     animation-duration: .4s;
 }
 
-@keyframes fade {
+@keyframes fadein {
     from {
         opacity: 0
     }
@@ -130,16 +269,30 @@ body {
     }
 }
 
-.fadefull {
-    animation-name: fadefull;
+.fadeinfull {
+    animation-name: fadeinfull;
     animation-duration: .4s;
 }
 
-@keyframes fadefull {
+@keyframes fadeinfull {
     from {
         opacity: 0
     }
     to {
         opacity: 1
+    }
+}
+
+.fadeout {
+    animation-name: fadeout;
+    animation-duration: .4s;
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 1
+    }
+    to {
+        opacity: 0
     }
 }

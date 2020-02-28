@@ -5,48 +5,36 @@
     <title id="title">Dance Dance HTML</title>
     <link rel="stylesheet" type="text/css" href="../css/gamePageStyle.css">
     <script src="../js/gamePageScript.js"></script>
-
 </head>
-<body>
-<div class="bgdecor">
-    <video id="bgdecor" src="" muted></video>
+<body onload="loadMaps('../leveldata.dat')">
+<div class="levelinfo">
+
 </div>
-<div class="playcanvas">
-    <canvas id="game" width="1280" height="720"></canvas>
-    <script>
-        keydata = [{
-            key: "s",
-            color: "#4fbfff",
-        }, {
-            key: "d",
-            color: "#55ff71",
-        }, {
-            key: "f",
-            color: "#ff6c5e",
-        }, {
-            key: " ",
-            color: "#fbff71",
-        }, {
-            key: "j",
-            color: "#ff6c5e",
-        }, {
-            key: "k",
-            color: "#55ff71",
-        }, {
-            key: "l",
-            color: "#4fbfff",
-        }];
-        initiate(keydata, "Aleph-0", 2);
-    </script>
+<div class="levelselectcontainer" id="levelselectcontainer">
+    <img src="../resources/Halo_Reach.jpg" alt="" id="lvlslcbg" draggable="false">
+    <div id="levelselectlist">
+        <ul id="listparent">
+        </ul>
+    </div>
+    <h1 id="header"></h1>
 </div>
-<div class="pausemenubg fade" id="pausemenubg" hidden></div>
-<div class="pausemenu fadefull" id="pausemenu" hidden>
-    <h1> Paused</h1>
-    <div class="menu">
-        <h2 id="resume" onmouseup="pause()">Resume</h2>
-        <h2 id="restart" onmouseup="restart()">Restart</h2>
-        <h2 id="options">Options</h2>
-        <h2 id="mainmenu" onmouseup="window.open('../html/gameMenu.html', '_self')">Main Menu</h2>
+<div class="gameontainer fadeinfull" id="gamecontainer" hidden>
+    <div class="bgdecor">
+        <video id="bgdecor" src="" muted></video>
+    </div>
+    <div class="playcanvas">
+        <canvas id="game" width="1280" height="720"></canvas>
+    </div>
+    <div class="pausemenubg fadein" id="pausemenubg" hidden></div>
+    <div class="pausemenu fadeinfull" id="pausemenu" hidden>
+        <h1> Paused</h1>
+        <div class="menu">
+            <h2 id="resume" onmouseup="pause()">Resume</h2>
+            <h2 id="restart" onmouseup="restart()">Restart</h2>
+            <h2 id="options" onmouseup="">Options</h2>
+            <h2 id="levelselect" onmouseup="clearInstance()">Level Select</h2>
+            <h2 id="mainmenu" onmouseup="window.open('../html/gameMenu.html', '_self')">Main Menu</h2>
+        </div>
     </div>
 </div>
 </body>

@@ -2,7 +2,7 @@ var score = 0;
 var combo = 0,
     combobroken = false;
 var timer, starter;
-var start = true,
+var hasstart = true,
     paused = false,
     ignorepress = false,
     nodelay = true;
@@ -21,7 +21,8 @@ const blockoffset = -hitterheight - hitteroffset;
 const fade = 0.5;
 const delayoffset = 0;
 const combomultiplier = .0001;
-var blocks = [];
+var levelarray = [];
+const blocks = [];
 var hitters = [];
 var keydata = [];
 var timings = [];
@@ -53,14 +54,14 @@ class Hitter {
     }
 }
 
-function initiate(keys, map, difficulty) {
-    mapName = map;
+function initiate(keys, mapIndex, difficulty) {
+    mapName = levelarray[mapIndex][1];
     diff = difficulty;
-    document.getElementById("title").innerText = "Dance Dance HTML: " + map;
-    document.getElementById("bgdecor").src = "../resources/" + map + "_bgdecor.mp4";
-    sound = new Audio("../musicdata/" + map + ".wav");
+    document.getElementById("title").innerText = "Dance Dance HTML: " + mapName;
+    document.getElementById("bgdecor").src = "../resources/" + levelarray[mapIndex][3][difficulty];
+    sound = new Audio("../musicdata/" + mapName + ".wav");
     sound.load();
-    let temparr = readTextFile("../timingdata/" + map + "_Timings" + difficulty + ".btm").split(",");
+    let temparr = readTextFile("../timingdata/" + mapName + "_Timings" + difficulty + ".btm").split(",");
     for (let i = 0; i < temparr.length; i++) {
         let tempdob = temparr[i].split(":");
         timings[i] = [parseInt(tempdob[0]), parseFloat(tempdob[1])];
@@ -106,31 +107,43 @@ function initiate(keys, map, difficulty) {
     ctx.lineWidth = 1;
     var textString = "Press B to begin";
     ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
+    document.getElementById("levelselectcontainer").addEventListener("webkitAnimationEnd", function a() {
+        document.getElementById("levelselectcontainer").hidden = true;
+        document.getElementById("levelselectcontainer").classList.remove("fadeout");
+        document.getElementById("levelselectcontainer").classList.add("fadeinfull");
+        document.getElementById("gamecontainer").hidden = false;
+        document.getElementById("levelselectcontainer").removeEventListener("webkitAnimationEnd", a);
+    });
+    document.getElementById("levelselectcontainer").classList.add("fadeout");
+}
+
+function kd(event) {
+    if (event.key === "b" && hasstart) {
+        startGame();
+        hasstart = false;
+    }
+    if (event.key === "Escape") {
+        pause();
+    }
+    for (let i = 0; i < keydata.length; i++) {
+        if (event.key === keydata[i].key && !ignorepress) {
+            hitters[i].active = true;
+        }
+    }
+}
+
+function ku(event) {
+    for (let i = 0; i < keydata.length; i++) {
+        if (event.key === keydata[i].key && !ignorepress) {
+            hitters[i].active = false;
+            hitters[i].updated = false;
+        }
+    }
 }
 
 function addListeners() {
-    document.addEventListener("keyup", function (event) {
-        if (event.key === "b" && start) {
-            startGame();
-            start = false;
-        }
-        if (event.key === "Escape") {
-            pause();
-        }
-    });
-    for (let i = 0; i < keydata.length; i++) {
-        document.addEventListener("keydown", function (event) {
-            if (event.key === keydata[i].key && !ignorepress) {
-                hitters[i].active = true;
-            }
-        });
-        document.addEventListener("keyup", function (event) {
-            if (event.key === keydata[i].key && !ignorepress) {
-                hitters[i].active = false;
-                hitters[i].updated = false;
-            }
-        });
-    }
+    document.addEventListener("keydown", kd);
+    document.addEventListener("keyup", ku);
 }
 
 function startGame() {
@@ -246,7 +259,7 @@ function pause() {
     document.getElementById("pausemenu").hidden = !paused;
     document.getElementById("pausemenubg").hidden = !paused;
     ignorepress = paused;
-    if (!start)
+    if (!hasstart)
         if (paused) {
 
             sound.pause();
@@ -282,7 +295,7 @@ function pause() {
 function restart() {
     clearTimeout(timer);
     clearTimeout(starter);
-    blocks = [];
+    blocks.splice(0, blocks.length);
     for (let i = 0; i < keydata.length; i++) {
         blocks.push([]);
     }
@@ -313,5 +326,96 @@ function restart() {
     ctx.lineWidth = 1;
     var textString = "Press B to begin";
     ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
-    start = true;
+    hasstart = true;
+}
+
+function clearInstance() {
+    restart();
+    document.removeEventListener("keydown", kd);
+    document.removeEventListener("keyup", ku);
+    score = 0;
+    combo = 0;
+    combobroken = false;
+    clearInterval(timer);
+    clearInterval(starter);
+    hasstart = true;
+    paused = false;
+    ignorepress = false;
+    nodelay = true;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("gamecontainer").addEventListener("webkitAnimationEnd", function a() {
+        document.getElementById("gamecontainer").hidden = true;
+        document.getElementById("gamecontainer").classList.remove("fadeout");
+        document.getElementById("gamecontainer").classList.add("fadeinfull");
+        document.getElementById("levelselectcontainer").hidden = false;
+        document.getElementById("gamecontainer").removeEventListener("webkitAnimationEnd", a);
+    });
+    document.getElementById("gamecontainer").classList.add("fadeout");
+    canvas = null;
+    ctx = null;
+    starttime = null;
+    mapName = "";
+    diff = 0;
+    delay = 0;
+    blocks.splice(0, blocks.length)
+    hitters = [];
+    keydata = [];
+    timings = [];
+    sound = null;
+}
+
+function loadMaps(datafile) {
+    let data = readTextFile(datafile);
+    let levelchunks = data.split(",");
+    let lvlarr = [];
+    for (let i = 0; i < levelchunks.length; i++) {
+        let lvldatchunks = levelchunks[i].split(":");
+        let lvlname = lvldatchunks[0];
+        let lvlid = lvldatchunks[1];
+        let difficulties = lvldatchunks[2].split("|");
+        let backgrounds = lvldatchunks[3].split("|");
+        lvlarr.push([lvlname, lvlid, difficulties, backgrounds]);
+    }
+    levelarray = lvlarr;
+    let listparent = document.getElementById("listparent");
+    let innerelement = "";
+    for (let i = 0; i < levelarray.length; i++) {
+        innerelement += "<li class='levelbanner' id='lvlid_" + i + "' onmouseup='start(" + i + "," + levelarray[i][2][0] + ")'><h1>" + levelarray[i][0] + "</h1></li>";
+        //loadLevelInfo(" + i + ")
+    }
+    listparent.innerHTML = innerelement;
+    alert(listparent.innerHTML)
+}
+
+function start(index, diff) {
+    keydata = [{
+        key: "s",
+        color: "#4fbfff",
+    }, {
+        key: "d",
+        color: "#55ff71",
+    }, {
+        key: "f",
+        color: "#ff6c5e",
+    }, {
+        key: " ",
+        color: "#fbff71",
+    }, {
+        key: "j",
+        color: "#ff6c5e",
+    }, {
+        key: "k",
+        color: "#55ff71",
+    }, {
+        key: "l",
+        color: "#4fbfff",
+    }];
+    initiate(keydata, index, diff);
+}
+
+function loadLevelInfo(index) {
+    let innerelement = "";
+    for (let j = 0; j < levelarray[index][1].length; j++) {
+        innerelement += "<h1>" + levelarray[index][1][j] + "</h1>";
+    }
 }
