@@ -29,7 +29,6 @@ body {
 }
 
 .levelselectcontainer #levelselectlist {
-    /*background-color: #5a79d0;*/
     width: 30%;
     height: 100%;
     margin-right: 0;
@@ -46,7 +45,7 @@ body {
 .levelselectcontainer #levelselectlist #listparent {
     display: block;
     width: 100%;
-    height: 100%;
+    height: 102%;
     margin: 0 0;
     position: absolute;
     right: 0;
@@ -55,24 +54,22 @@ body {
 }
 
 #levelselectlist ul::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
 }
 
 .levelbanner {
     display: block;
-    background: linear-gradient(270deg, rgba(2,0,36,0) 41%, rgba(0, 216, 255, 0.3) 100%);
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 41%, rgba(0, 216, 255, 0.3) 100%);
     width: 100%;
     height: 10%;
     margin: 1% 0;
     overflow: hidden;
+    border-left: 5px solid rgba(255, 255, 255, 0);
 }
 
 .levelbanner:hover {
-    border-left: 5px solid white;
-    background: linear-gradient(270deg, rgba(2,0,36,0) 0%, rgba(0,212,255,1) 100%);
+    border-left-color: rgba(255, 255, 255, 1);
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 0%, rgba(0, 212, 255, 1) 100%);
 }
-
 
 .levelbanner h1 {
     color: white;
@@ -86,7 +83,9 @@ body {
     position: fixed;
     border-bottom-right-radius: 10px;
     width: 60%;
+    height: 8%;
     top: 0;
+    left: 0;
     user-select: none;
 }
 
@@ -96,6 +95,114 @@ body {
     text-align: left;
     text-decoration: none;
     font-size: 30px;
+}
+
+.levelinfo {
+    position: fixed;
+    overflow: hidden;
+    width: 60%;
+    height: 92%;
+    top: 8%;
+    margin-left: 0;
+    /*border: solid black;*/
+    /*background-color: white;*/
+}
+
+.leaderb {
+    position: absolute;
+    /*border: solid black;*/
+    background-color: #60ff54;
+    width: 30%;
+    height: 100%;
+}
+
+#lb {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, rgba(0, 212, 255, 0.4) 40%, rgba(0, 212, 255, 0.4) 60%, rgba(0, 212, 255, 0) 100%);
+    height: 5%;
+    width: 100%;
+    color: white;
+    top: 1%;
+}
+
+#lb h2 {
+    position: absolute;
+    width: 50%;
+    left: 25%;
+    height: 2.5%;
+    top: -25%;
+    text-align: center;
+}
+
+.leaderb ul {
+    position: absolute;
+    list-style-type: none;
+    width: 100%;
+    height: 100%;
+    top: 5%;
+    left: -10%;
+}
+
+.leaderb li {
+    display: block;
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 41%, rgba(159, 159, 159, 0.3) 100%);
+    width: 100%;
+    height: 10%;
+    margin: 1% 0;
+    overflow: hidden;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+}
+
+.info {
+    position: absolute;
+    /*border: solid black;*/
+    background-color: #ff9861;
+    right: 0;
+    width: 70%;
+    height: 60%;
+}
+
+.difficulty {
+    position: absolute;
+    /*border: solid black;*/
+    background-color: #3765ff;
+    width: 70%;
+    height: 20%;
+    right: 0;
+    top: 60%;
+}
+
+.difficulty > ul {
+    list-style-type: none;
+    position: absolute;
+    height: 50%;
+    top: 40%;
+    overflow-y: auto;
+    white-space: nowrap;
+}
+
+.difficulty > ul > li {
+    display: inline-block;
+    float: left;
+    padding: 0 10px;
+}
+
+.difficulty > ul > li > div {
+    width: 50px;
+    height: 50px;
+    /*border: solid black;*/
+    background-color: #ff9861;
+}
+
+.play {
+    position: absolute;
+    /*border: solid black;*/
+    border-radius: 10px;
+    background-color: #ff39c8;
+    width: 30%;
+    height: 10%;
+    right: 5%;
+    bottom: 5%;
 }
 
 /*game section*/
