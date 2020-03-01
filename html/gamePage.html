@@ -21,15 +21,15 @@
                 <li>
                     <h1 style="color: white">CoolGuy21:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp123879</h1>
                 </li>
-<!--                <li>-->
-<!--                    stuff-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    stuff-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    stuff-->
-<!--                </li>-->
+                <!--                <li>-->
+                <!--                    stuff-->
+                <!--                </li>-->
+                <!--                <li>-->
+                <!--                    stuff-->
+                <!--                </li>-->
+                <!--                <li>-->
+                <!--                    stuff-->
+                <!--                </li>-->
             </ul>
         </div>
         <div class="info">
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="play" onmouseup="playCurrent()">
+        <div class="play" onmouseup="playCurrent(); bgAudio.pause()">
             <h1>Play</h1>
         </div>
     </div>
@@ -82,7 +82,6 @@
         <ul id="listparent" class="noscrollbar">
         </ul>
     </div>
-
 </div>
 <div class="gameontainer fadeinfull" id="gamecontainer" hidden>
     <div class="bgdecor">
@@ -98,7 +97,7 @@
             <h2 id="resume" onmouseup="pause()">Resume</h2>
             <h2 id="restart" onmouseup="restart()">Restart</h2>
             <h2 id="options" onmouseup="">Options</h2>
-            <h2 id="levelselect" onmouseup="clearInstance()">Level Select</h2>
+            <h2 id="levelselect" onmouseup="bgAudio.currentTime = sound.currentTime; clearInstance(); document.getElementById('title').innerText = 'Dance Dance HTML'; bgAudio.play();">Level Select</h2>
             <h2 id="mainmenu" onmouseup="window.open('../html/gameMenu.html', '_self')">Main Menu</h2>
         </div>
     </div>
