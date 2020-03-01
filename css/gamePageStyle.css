@@ -265,6 +265,7 @@ body {
     background-color: rgba(0, 212, 255, 0.78) !important;
     border: solid white !important;
     z-index: 1002;
+    color: white;
 }
 
 .selected-right {
