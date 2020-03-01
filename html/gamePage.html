@@ -14,10 +14,8 @@
             <h1 id="lvlnamedisplay">Level Select</h1>
         </div>
         <div class="leaderb">
-            <div id="lbp">
-                <div id="lb">
-                    <h2>Leaderboard</h2>
-                </div>
+            <div class="centered_header">
+                <h2>Leaderboard</h2>
             </div>
             <ul>
                 <li>
@@ -35,91 +33,53 @@
             </ul>
         </div>
         <div class="info">
-            info
+            <div id="stats_panel">
+                <ul class="stat_list">
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>Song Length</h2></li>
+                            <li class="statval"><h2 id="songlength">00:00</h2></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>Map Length</h2></li>
+                            <li class="statval"><h2 id="mplength">00:00</h2></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>Notes</h2></li>
+                            <li class="statval"><h2 id="notes">0</h2></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>BPM</h2></li>
+                            <li class="statval"><h2 id="bpm">0</h2></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="centered_header">
+                <h2>Level Info</h2>
+            </div>
         </div>
         <div class="difficulty">
-            <h2>diff sel</h2>
-            <ul>
-                <li>
-                    <div>
-                        1
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        2
-                    </div>
-                </li>
-
-            </ul>
+            <div class="centered_header" style="height: 20%">
+                <h2>Difficulty</h2>
+            </div>
+            <div id="diffSelector">
+                <div id="selector">
+                </div>
+            </div>
         </div>
-        <div class="play" onmouseup="">
-            play button
+        <div class="play" onmouseup="playCurrent()">
+            <h1>Play</h1>
         </div>
     </div>
-
     <div id="levelselectlist">
-        <ul id="listparent">
+        <ul id="listparent" class="noscrollbar">
         </ul>
     </div>
 
