@@ -8,9 +8,11 @@ let hasstart = true,
     nodelay = true;
 let canvas,
     ctx;
+let bgAudio = null;
 let starttime;
 let mapName,
     diff = 0,
+    currentIndex = 0,
     delay = 0;
 const fallrate = 5;
 const blockwidth = 200;
@@ -22,7 +24,7 @@ const fade = 0.5;
 const delayoffset = 0;
 const combomultiplier = .0001;
 let levelarray = [];
-const blocks = [];
+let blocks = [];
 let hitters = [];
 let keydata = [];
 let timings = [];
@@ -58,10 +60,10 @@ function initiate(keys, mapIndex, difficulty) {
     mapName = levelarray[mapIndex][1];
     diff = difficulty;
     document.getElementById("title").innerText = "Dance Dance HTML: " + mapName;
-    document.getElementById("bgdecor").src = "../resources/" + levelarray[mapIndex][3][difficulty];
+    document.getElementById("bgdecor").src = "../resources/" + levelarray[mapIndex][3][diff];
     sound = new Audio("../musicdata/" + mapName + ".wav");
     sound.load();
-    let temparr = readTextFile("../timingdata/" + mapName + "_Timings" + difficulty + ".btm").split(",");
+    let temparr = readTextFile("../timingdata/" + mapName + "_Timings" + levelarray[mapIndex][2][diff] + ".btm").split(",");
     for (let i = 0; i < temparr.length; i++) {
         let tempdob = temparr[i].split(":");
         timings[i] = [parseInt(tempdob[0]), parseFloat(tempdob[1])];
@@ -108,15 +110,6 @@ function initiate(keys, mapIndex, difficulty) {
     var textString = "Press B to begin";
     ctx.fillText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
     ctx.strokeText(textString, ctx.canvas.width / 2 - ctx.measureText(textString).width / 2, ctx.canvas.height / 2);
-    document.getElementById("levelselectcontainer").addEventListener("webkitAnimationEnd", function a() {
-        document.getElementById("levelselectcontainer").hidden = true;
-        document.getElementById("levelselectcontainer").classList.remove("fadeout");
-        document.getElementById("levelselectcontainer").classList.add("fadeinfull");
-        document.getElementById("levelselectcontainer").removeEventListener("webkitAnimationEnd", a);
-    });
-    document.getElementById("gamecontainer").hidden = false;
-    document.getElementById("levelselectcontainer").classList.add("fadeout");
-
 }
 
 function kd(event) {
@@ -338,35 +331,122 @@ function clearInstance() {
         document.getElementById("gamecontainer").classList.add("fadeinfull");
         document.getElementById("gamecontainer").removeEventListener("webkitAnimationEnd", a);
         restart();
-        document.removeEventListener("keydown", kd);
-        document.removeEventListener("keyup", ku);
-        score = 0;
-        combo = 0;
-        combobroken = false;
-        clearInterval(timer);
-        clearInterval(starter);
-        hasstart = true;
-        paused = false;
-        ignorepress = false;
-        nodelay = true;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas = null;
-        ctx = null;
-        starttime = null;
-        mapName = "";
-        diff = 0;
-        delay = 0;
-        blocks.splice(0, blocks.length);
-        hitters = [];
-        keydata = [];
-        timings = [];
-        sound = null;
+        resetVals();
     });
     document.getElementById("levelselectcontainer").hidden = false;
     document.getElementById("gamecontainer").classList.add("fadeout");
 }
 
+function resetVals() {
+    document.removeEventListener("keydown", kd);
+    document.removeEventListener("keyup", ku);
+    score = 0;
+    combo = 0;
+    combobroken = false;
+    clearInterval(timer);
+    clearInterval(starter);
+    hasstart = true;
+    paused = false;
+    ignorepress = false;
+    nodelay = true;
+    if (ctx != null)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas = null;
+    ctx = null;
+    starttime = null;
+    mapName = "";
+    diff = 0;
+    delay = 0;
+    blocks = [];
+    hitters = [];
+    keydata = [];
+    timings = [];
+    sound = null;
+}
+
+function changeDiff(amt) {
+    diff += amt;
+    if (diff < 0)
+        diff = 0;
+    if (diff > levelarray[currentIndex][2].length - 1)
+        diff = levelarray[currentIndex][2].length - 1;
+    let elements = document.getElementById("selector").children;
+    for (let i = 0; i < elements.length; i++)
+        elements[i].style.display = "none";
+    if (amt <= 0) {
+        if (elements[diff - 1] != null) {
+            elements[diff - 1].className = "";
+            elements[diff - 1].style.display = "inline-block";
+            elements[diff - 1].classList.add("selected-left-left_r");
+        }
+        if (elements[diff] != null) {
+            elements[diff].className = "";
+            elements[diff].style.display = "inline-block";
+            elements[diff].classList.add("selected-left_r");
+            elements[diff].classList.add("selected");
+        }
+        if (elements[diff + 1] != null) {
+            elements[diff + 1].className = "";
+            elements[diff + 1].style.display = "inline-block";
+            elements[diff + 1].classList.add("selected-right_r");
+        }
+        if (elements[diff + 2] != null) {
+            elements[diff + 2].className = "";
+            elements[diff + 2].style.display = "inline-block";
+            elements[diff + 2].classList.add("selected-right-right_r");
+        }
+    } else {
+        if (elements[diff - 2] != null) {
+            elements[diff - 2].className = "";
+            elements[diff - 2].style.display = "inline-block";
+            elements[diff - 2].classList.add("selected-left-left");
+        }
+        if (elements[diff - 1] != null) {
+            elements[diff - 1].className = "";
+            elements[diff - 1].style.display = "inline-block";
+            elements[diff - 1].classList.add("selected-left");
+        }
+        if (elements[diff] != null) {
+            elements[diff].className = "";
+            elements[diff].style.display = "inline-block";
+            elements[diff].classList.add("selected-right");
+            elements[diff].classList.add("selected");
+        }
+        if (elements[diff + 1] != null) {
+            elements[diff + 1].className = "";
+            elements[diff + 1].style.display = "inline-block";
+            elements[diff + 1].classList.add("selected-right-right");
+        }
+    }
+    loadLevelInfo(currentIndex, diff);
+}
+
+function setActive(index) {
+    for (let i = 0; i < levelarray.length; i++) {
+        if (i === index)
+            document.getElementById("lvlid_" + i).classList.add("active");
+        else
+            document.getElementById("lvlid_" + i).classList.remove("active");
+    }
+    let innerelement = "";
+    for (let j = 0; j < levelarray[index][2].length; j++) {
+        innerelement += "<div><h2>" + levelarray[index][2][j] + "</h2></div>";
+    }
+    document.getElementById("selector").innerHTML = innerelement;
+    diff = 0;
+    if (bgAudio != null)
+        bgAudio.pause();
+    bgAudio = new Audio("../musicdata/" + levelarray[index][1] + ".wav");
+    bgAudio.volume = .3;
+    bgAudio.play().then(val => changeDiff(0));
+}
+
 function loadMaps(datafile) {
+    document.getElementById("selector").addEventListener("wheel", function (event) {
+        if (event.deltaY !== 0) {
+            changeDiff(-event.deltaY / Math.abs(event.deltaY));
+        }
+    });
     let data = readTextFile(datafile);
     let levelchunks = data.split(",");
     let lvlarr = [];
@@ -382,14 +462,13 @@ function loadMaps(datafile) {
     let listparent = document.getElementById("listparent");
     let innerelement = "";
     for (let i = 0; i < levelarray.length; i++) {
-        innerelement += "<li class='levelbanner' id='lvlid_" + i + "' onmouseup='start(" + i + "," + levelarray[i][2][0] + ")'><h1>" + levelarray[i][0] + "</h1></li>";
-        // TODO: move function to info page
-        //loadLevelInfo(" + i + ")
+        innerelement += "<li class='levelbanner' id='lvlid_" + i + "' onmouseup='currentIndex = " + i + ";diff = 0; loadLevelInfo(currentIndex, diff); setActive(currentIndex); '><h1>" + levelarray[i][0] + "</h1></li>";
     }
     listparent.innerHTML = innerelement;
 }
 
-function start(index, diff) {
+function loadLevelInfo(index, diff) {
+    resetVals();
     keydata = [{
         key: "s",
         color: "#4fbfff",
@@ -413,12 +492,27 @@ function start(index, diff) {
         color: "#4fbfff",
     }];
     initiate(keydata, index, diff);
-}
-
-function loadLevelInfo(index) {
-    let innerelement = "";
-    for (let j = 0; j < levelarray[index][1].length; j++) {
-        innerelement += "<h1>" + levelarray[index][1][j] + "</h1>";
+    if (bgAudio != null) {
+        let minutes = Math.floor(bgAudio.duration / 60);
+        let seconds = bgAudio.duration - minutes * 60;
+        document.getElementById("songlength").innerText = minutes + ":" + Math.round(seconds);
     }
+    let blockcount = 0;
+    for (let i = 0; i < blocks.length; i++) {
+        blockcount += blocks[i].length;
+    }
+    document.getElementById("notes").innerText = blockcount + "";
     // TODO: add info loader
 }
+
+function playCurrent() {
+    document.getElementById("levelselectcontainer").addEventListener("webkitAnimationEnd", function a() {
+        document.getElementById("levelselectcontainer").hidden = true;
+        document.getElementById("levelselectcontainer").classList.remove("fadeout");
+        document.getElementById("levelselectcontainer").classList.add("fadeinfull");
+        document.getElementById("levelselectcontainer").removeEventListener("webkitAnimationEnd", a);
+    });
+    document.getElementById("gamecontainer").hidden = false;
+    document.getElementById("levelselectcontainer").classList.add("fadeout");
+}
+

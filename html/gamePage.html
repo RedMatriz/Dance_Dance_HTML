@@ -7,17 +7,80 @@
     <script src="../js/gamePageScript.js"></script>
 </head>
 <body onload="loadMaps('../leveldata.dat')">
-<div class="levelinfo">
-
-</div>
 <div class="levelselectcontainer" id="levelselectcontainer">
     <img src="../resources/Halo_Reach.jpg" alt="" id="lvlslcbg" draggable="false">
-    <div id="levelselectlist">
-        <ul id="listparent">
-        </ul>
+    <div class="levelinfo">
+        <div id="header">
+            <h1 id="lvlnamedisplay">Level Select</h1>
+        </div>
+        <div class="leaderb">
+            <div class="centered_header">
+                <h2>Leaderboard</h2>
+            </div>
+            <ul>
+                <li>
+                    <h1 style="color: white">CoolGuy21:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp123879</h1>
+                </li>
+                <!--                <li>-->
+                <!--                    stuff-->
+                <!--                </li>-->
+                <!--                <li>-->
+                <!--                    stuff-->
+                <!--                </li>-->
+                <!--                <li>-->
+                <!--                    stuff-->
+                <!--                </li>-->
+            </ul>
+        </div>
+        <div class="info">
+            <div id="stats_panel">
+                <ul class="stat_list">
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>Song Length</h2></li>
+                            <li class="statval"><h2 id="songlength">00:00</h2></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>Map Length</h2></li>
+                            <li class="statval"><h2 id="mplength">00:00</h2></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>Notes</h2></li>
+                            <li class="statval"><h2 id="notes">0</h2></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="stat">
+                            <li class="statlabel"><h2>BPM</h2></li>
+                            <li class="statval"><h2 id="bpm">0</h2></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="centered_header">
+                <h2>Level Info</h2>
+            </div>
+        </div>
+        <div class="difficulty">
+            <div class="centered_header" style="height: 20%">
+                <h2>Difficulty</h2>
+            </div>
+            <div id="diffSelector">
+                <div id="selector">
+                </div>
+            </div>
+        </div>
+        <div class="play" onmouseup="playCurrent(); bgAudio.pause()">
+            <h1>Play</h1>
+        </div>
     </div>
-    <div id="header">
-        <h1>Level Select</h1>
+    <div id="levelselectlist">
+        <ul id="listparent" class="noscrollbar">
+        </ul>
     </div>
 </div>
 <div class="gameontainer fadeinfull" id="gamecontainer" hidden>
@@ -34,7 +97,7 @@
             <h2 id="resume" onmouseup="pause()">Resume</h2>
             <h2 id="restart" onmouseup="restart()">Restart</h2>
             <h2 id="options" onmouseup="">Options</h2>
-            <h2 id="levelselect" onmouseup="clearInstance()">Level Select</h2>
+            <h2 id="levelselect" onmouseup="bgAudio.currentTime = sound.currentTime; clearInstance(); document.getElementById('title').innerText = 'Dance Dance HTML'; bgAudio.play();">Level Select</h2>
             <h2 id="mainmenu" onmouseup="window.open('../html/gameMenu.html', '_self')">Main Menu</h2>
         </div>
     </div>

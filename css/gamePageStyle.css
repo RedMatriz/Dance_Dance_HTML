@@ -6,6 +6,26 @@ body {
 
 /*level select section*/
 
+.centered_header {
+    position: absolute;
+    width: 100%;
+    height: 5%;
+    margin-top: 10px;
+    display: table;
+    /*background-color: black;*/
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, rgba(0, 212, 255, 0.4) 40%, rgba(0, 212, 255, 0.4) 60%, rgba(0, 212, 255, 0) 100%);
+}
+
+.centered_header > h2 {
+    text-align: center;
+    color: white;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.noscrollbar::-webkit-scrollbar {
+}
+
 .levelselectcontainer {
     margin: 0;
     width: 100%;
@@ -29,7 +49,6 @@ body {
 }
 
 .levelselectcontainer #levelselectlist {
-    /*background-color: #5a79d0;*/
     width: 30%;
     height: 100%;
     margin-right: 0;
@@ -46,7 +65,7 @@ body {
 .levelselectcontainer #levelselectlist #listparent {
     display: block;
     width: 100%;
-    height: 100%;
+    height: 102%;
     margin: 0 0;
     position: absolute;
     right: 0;
@@ -54,25 +73,25 @@ body {
     overflow-y: auto;
 }
 
-#levelselectlist ul::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-}
-
 .levelbanner {
     display: block;
-    background: linear-gradient(270deg, rgba(2,0,36,0) 41%, rgba(0, 216, 255, 0.3) 100%);
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 41%, rgba(0, 216, 255, 0.3) 100%);
     width: 100%;
     height: 10%;
     margin: 1% 0;
     overflow: hidden;
+    border-left: 5px solid rgba(255, 255, 255, 0);
 }
 
 .levelbanner:hover {
-    border-left: 5px solid white;
-    background: linear-gradient(270deg, rgba(2,0,36,0) 0%, rgba(0,212,255,1) 100%);
+    border-left-color: rgba(255, 255, 255, 1);
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 0%, rgba(0, 212, 255, 1) 100%);
 }
 
+.active {
+    border-left-color: rgba(255, 255, 255, 1);
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 0%, rgba(0, 212, 255, 1) 100%);
+}
 
 .levelbanner h1 {
     color: white;
@@ -86,7 +105,9 @@ body {
     position: fixed;
     border-bottom-right-radius: 10px;
     width: 60%;
+    height: 8%;
     top: 0;
+    left: 0;
     user-select: none;
 }
 
@@ -96,6 +117,329 @@ body {
     text-align: left;
     text-decoration: none;
     font-size: 30px;
+}
+
+.levelinfo {
+    position: fixed;
+    overflow: hidden;
+    width: 60%;
+    height: 92%;
+    top: 8%;
+    margin-left: 0;
+    /*border: solid black;*/
+    /*background-color: white;*/
+}
+
+.leaderb {
+    position: absolute;
+    /*border: solid black;*/
+    /*background-color: #60ff54;*/
+    width: 30%;
+    height: 100%;
+}
+
+.leaderb ul {
+    position: absolute;
+    list-style-type: none;
+    width: 100%;
+    height: 100%;
+    top: 5%;
+    left: -10%;
+}
+
+.leaderb li {
+    display: block;
+    background-color: rgba(133, 133, 133, 0.1);
+    width: 100%;
+    height: 10%;
+    margin: 1% 0;
+    overflow: hidden;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+}
+
+.info {
+    position: absolute;
+    /*border: solid black;*/
+    /*background-color: #ff9861;*/
+    right: 0;
+    width: 70%;
+    height: 100%;
+}
+
+.info > #stats_panel {
+    position: absolute;
+    width: 100%;
+    height: 60%;
+    left: 0;
+    /*background-color: blueviolet;*/
+}
+
+.stat {
+    position: absolute;
+    list-style-type: none;
+    overflow: hidden;
+    width: 78%;
+    float: left;
+}
+
+.statlabel {
+    text-align: left;
+}
+
+.statval {
+    text-align: right;
+    float: right;
+}
+
+.stat li {
+    display: inline-block;
+}
+
+.stat_list {
+    position: absolute;
+    margin-top: 10%;
+    width: 100%;
+    height: 80%;
+    list-style-type: none;
+}
+
+.stat_list > li {
+    height: 15%;
+    width: 100%;
+    margin-top: 5%;
+    color: white;
+    background: linear-gradient(270deg, rgba(2, 0, 36, 0) 30%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.stat_list > li > h2 {
+    position: absolute;
+    float: left;
+    width: 100%;
+    margin-left: 2%;
+}
+
+.difficulty {
+    position: absolute;
+    /*border: solid black;*/
+    /*background-color: #3765ff;*/
+    width: 70%;
+    height: 20%;
+    right: 0;
+    top: 60%;
+}
+
+#selector {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    height: 50%;
+}
+
+#selector > div {
+    left: 46%;
+    top: 25%;
+    width: 40px;
+    height: 40px;
+    border: solid black;
+    border-radius: 5px;
+    background-color: rgba(97, 97, 97, 0.41);
+    display: inline-block;
+    position: absolute;
+}
+
+#selector > div > h2 {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    text-align: center;
+    top: -13px;
+    left: -1px;
+}
+
+/*#selector > div:hover{*/
+/*    background-color: rgba(0, 212, 255, 0.78);*/
+/*    border: solid white;*/
+/*}*/
+
+.selected {
+    background-color: rgba(0, 212, 255, 0.78) !important;
+    border: solid white !important;
+    z-index: 1002;
+    color: white;
+}
+
+.selected-right {
+    animation-timing-function: linear;
+    animation-name: out1r;
+    animation-duration: .1s;
+    animation-direction: reverse;
+    animation-fill-mode: forwards;
+}
+
+.selected-right-right {
+    animation-timing-function: linear;
+    animation-name: out2r;
+    animation-duration: .1s;
+    animation-direction: reverse;
+    animation-fill-mode: forwards;
+}
+
+.selected-left {
+    animation-timing-function: linear;
+    animation-name: out1l;
+    animation-duration: .1s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    z-index: 1001;
+}
+
+.selected-left-left {
+    animation-timing-function: linear;
+    animation-name: out2l;
+    animation-duration: .1s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+}
+
+.selected-right_r {
+    animation-timing-function: linear;
+    animation-name: out1ra;
+    animation-duration: .1s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    z-index: 1001;
+}
+
+.selected-right-right_r {
+    animation-timing-function: linear;
+    animation-name: out2ra;
+    animation-duration: .1s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+}
+
+.selected-left_r {
+    animation-timing-function: linear;
+    animation-name: out1la;
+    animation-duration: .1s;
+    animation-direction: reverse;
+    animation-fill-mode: forwards;
+}
+
+.selected-left-left_r {
+    animation-timing-function: linear;
+    animation-name: out2la;
+    animation-duration: .1s;
+    animation-direction: reverse;
+    animation-fill-mode: forwards;
+}
+
+@keyframes out1r {
+    0% {
+        transform: translate(0) scale(1);
+    }
+    100% {
+        opacity: .5;
+        transform: translate(100px) scale(.5);
+    }
+}
+
+@keyframes out2r {
+    0% {
+        opacity: .5;
+        transform: translate(100px) scale(.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(150px) scale(0);
+    }
+}
+
+@keyframes out1l {
+    0% {
+        transform: translate(0) scale(1);
+    }
+    100% {
+        opacity: .5;
+        transform: translate(-100px) scale(.5);
+    }
+}
+
+@keyframes out2l {
+    0% {
+        opacity: .5;
+        transform: translate(-100px) scale(.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-150px) scale(0);
+    }
+}
+
+@keyframes out1ra {
+    0% {
+        transform: translate(0) scale(1);
+    }
+    100% {
+        opacity: .5;
+        transform: translate(100px) scale(.5);
+    }
+}
+
+@keyframes out2ra {
+    0% {
+        opacity: .5;
+        transform: translate(100px) scale(.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(150px) scale(0);
+    }
+}
+
+@keyframes out1la {
+    0% {
+        transform: translate(0) scale(1);
+    }
+    100% {
+        opacity: .5;
+        transform: translate(-100px) scale(.5);
+    }
+}
+
+@keyframes out2la {
+    0% {
+        opacity: .5;
+        transform: translate(-100px) scale(.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-150px) scale(0);
+    }
+}
+
+.play {
+    position: absolute;
+    border: solid white;
+    border-radius: 10px;
+    background-color: rgba(0, 212, 255, 0.41);
+    width: 30%;
+    height: 10%;
+    left: 50%;
+    bottom: 5%;
+}
+
+.play:hover {
+    background-color: rgba(0, 212, 255, 0.78);
+}
+
+.play > h1 {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    top: -10%;
+    color: white;
+    font-size: 40px;
 }
 
 /*game section*/
