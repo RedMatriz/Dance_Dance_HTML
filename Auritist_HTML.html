@@ -8,6 +8,34 @@
     <title>Title</title>
 </head>
 <body style="background-color: cadetblue">
+<table id="alancantcode">
+        <tr>
+            <th>Album</th>
+            <th>Artist</th>
+            <th>Genre</th>
+            <th>Date</th>
+        </tr>
+        <tr>
+            <td>alan</td>
+            <td>is</td>
+            <td>big</td>
+            <td>dumb</td>
+        </tr>
+    <script>
+        function f() {
+            let innertxt = "";
+            for (let i = 0; i < 2; i++) {
+                innertxt += "<tr>" +
+                    "            <td>alan</td>" +
+                    "            <td>is</td>" +
+                    "            <td>big</td>" +
+                    "            <td>dumb</td>" +
+                    "        </tr>";
+            }
+            document.getElementById("alancantcode").innerHTML += innertxt;
+        }
+    </script>
+</table>
 <h3></h3>
     <form action="/Auritist_HTML.php" style = "text-align: center">
         <label for = "album">Album</label><br>
@@ -16,17 +44,11 @@
         <input type = "text" id = "artist" name = "artist" value = ""><br><br>
         <label for = "genre">Genre</label><br>
         <input type = "text" id = "genre" name = "genre" value = ""><br><br>
-        <label for = "date">Artist</label><br>
+        <label for = "date">Date</label><br>
         <input type = "month" id = "date" name = "date" value = ""><br><br><br>
-        <input type = "button" id = "save" value = "Save" onmouseup="function f() {
-
-        }">
-        <input type = "button" id = "delete" value = "Delete" onmouseup="function f() {
-
-        }">
-        <input type = "button" id = "update" value = "Update" onmouseup="function f() {
-
-        }">
+        <input type = "button" id = "save" value = "Save" onmouseup="f()">
+        <input type = "button" id = "delete" value = "Delete" onmouseup="f()">
+        <input type = "button" id = "update" value = "Update" onmouseup="f()">
     </form>
 </body>
 </html>
