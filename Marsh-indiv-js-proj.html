@@ -4,51 +4,108 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script>
+        const data = [];
 
+        class Song {
+            constructor(album, artist, genre, reld) {
+                this.album = album;
+                this.artist = artist;
+                this.genre = genre;
+                this.reld = reld;
+            }
+
+            toTableRow() {
+                return "<tr><td>" + this.album + "</td><td>" + this.artist + "</td><td>" + this.genre + "</td> <td>" + this.reld + "</td></tr>"
+            }
+        }
+
+        function addData(alb, art, gen, date) {
+            data.push(new Song(alb, art, gen, date));
+            reloadTable()
+        }
+
+        function reloadTable() {
+            let innercode = "<tr><th>Album</th><th>Artist</th><th>Genre</th><th>Release Date</th></tr>";
+            for (let i = 0; i < data.length; i++) {
+                innercode +=;
+            }
+            document.getElementById("album_list").innerHTML = innercode;
+        }
     </script>
     <style>
         body {
             margin: 0;
             background-color: #5d5d5d;
+            user-select: none;
         }
+
         h1 {
             text-align: center;
             width: 100%;
         }
-        div {
-            width: 100%;
+
+        #form {
+            position: absolute;
             text-align: center;
-            padding: 50px 0;
+            width: 50%;
+            height: 100%;
+            background-color: rebeccapurple;
         }
-        label {
-            /*float: right;*/
-            padding: 50px 0;
+
+        #list {
+            position: absolute;
+            text-align: center;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background-color: greenyellow;
+        }
+
+        #album_list {
+            position: absolute;
+            /*top: 0;*/
+            text-align: left;
+            width: 100%;
+            /*height: 100%;*/
         }
     </style>
 </head>
 <body>
+
+<div id="form">
     <h1>
         Javascript project thing
     </h1>
     <div>
-        <label>Album
-        <input type="text">
-        </label>
-        <br>
-        <label>
-            Artist
-            <input type="text">
-        </label>
-        <br>
-        <label>
-            Genre
-            <input type="text">
-        </label>
-        <br>
-        <label>
-            Release Date
-            <input type="date">
-        </label>
+        <label for="album">Album </label>
+        <input type="text" id="album">
     </div>
+    <br>
+    <div>
+        <label for="artist">Artist</label>
+        <input type="text" id="artist">
+    </div>
+    <br>
+    <div>
+        <label for="genre">Genre</label>
+        <input type="text" id="genre">
+    </div>
+    <br>
+    <div>
+        <label for="release_date">Release Date</label>
+        <input type="date" id="release_date">
+    </div>
+
+</div>
+<div id="list">
+    <table id="album_list">
+        <tr>
+            <th>Album</th>
+            <th>Artist</th>
+            <th>Genre</th>
+            <th>Release Date</th>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
