@@ -4,7 +4,21 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script>
-        const data = [];
+        let data = [];
+        let saves = [];
+        let selectedRow = -1;
+        let loadindex = -1;
+
+        class Save {
+            constructor(name, date) {
+                this.name = name;
+                this.date = date;
+            }
+
+            toTableRow() {
+                return "<td>" + this.name + "</td><td>" + this.date + "</td>";
+            }
+        }
 
         class Song {
             constructor(album, artist, genre, reld) {
@@ -15,11 +29,12 @@
             }
 
             toTableRow() {
-                return "<tr><td>" + this.album + "</td><td>" + this.artist + "</td><td>" + this.genre + "</td> <td>" + this.reld + "</td></tr>"
+                return "<td>" + this.album + "</td><td>" + this.artist + "</td><td>" + this.genre + "</td> <td>" + this.reld + "</td>"
             }
         }
 
         function addData(alb, art, gen, date) {
+            selectedRow = -1;
             data.push(new Song(alb, art, gen, date));
             reloadTable()
         }
@@ -27,9 +42,73 @@
         function reloadTable() {
             let innercode = "<tr><th>Album</th><th>Artist</th><th>Genre</th><th>Release Date</th></tr>";
             for (let i = 0; i < data.length; i++) {
-                innercode +=;
+                innercode += "<tr onmouseup='selectedRow = " + i + ";" +
+                    "document.getElementById(\"album\").value = data[selectedRow].album;" +
+                    "document.getElementById(\"artist\").value=data[selectedRow].artist;" +
+                    "document.getElementById(\"genre\").value=data[selectedRow].genre;" +
+                    "document.getElementById(\"release_date\").value=data[selectedRow].reld;reloadTable()' class='entry";
+                if (i === selectedRow)
+                    innercode += " selected";
+                innercode += "'>" + data[i].toTableRow() + "</tr>";
             }
             document.getElementById("album_list").innerHTML = innercode;
+        }
+
+        function sToCookie() {
+            let savedata = "";
+            for (let j = 0; j < saves.length; j++) {
+                savedata += saves[j].name + "|" + saves[j].date;
+                if (j !== saves.length - 1) {
+                    savedata += "^";
+                }
+            }
+            localStorage.setItem("savemap", savedata);
+        }
+
+        function reloadSaves() {
+
+            let rawdata = localStorage.getItem("savemap");
+            if (rawdata != null) {
+                let saveentries = rawdata.split("^");
+                for (let i = 0; i < saveentries.length; i++) {
+                    let temp = saveentries[i].split("|");
+                    saves[i] = new Save(temp[0], temp[1]);
+                }
+            }
+            let innerelement = "<tr><th>Save Name</th><th>Date Modified</th></tr>";
+            for (let i = 0; i < saves.length; i++) {
+                innerelement += "<tr class='save_entry' onmouseup='loadindex = " + i + "'>" + saves[i].toTableRow() + "</tr>";
+            }
+            document.getElementById("save_list").innerHTML = innerelement;
+        }
+
+        function save(name) {
+            saves.push(new Save(name, new Date().toDateString()));
+            let savedata = "";
+            for (let j = 0; j < data.length; j++) {
+                savedata += data[j].album +
+                    "|" + data[j].artist +
+                    "|" + data[j].genre +
+                    "|" + data[j].reld;
+                if (j !== data.length - 1) {
+                    savedata += ":";
+                }
+            }
+            alert(savedata);
+            localStorage.setItem(name, savedata);
+            sToCookie();
+        }
+
+        function load(index) {
+            data = [];
+            alert(saves[index].name);
+            let rawdata = localStorage.getItem(saves[index].name);
+            let entries = rawdata.split(":");
+            for (let i = 0; i < entries.length; i++) {
+                let temp = entries[i].split("|");
+                data.push(new Song(temp[0], temp[1], temp[2], new Date(temp[3]).toDateString()))
+            }
+            reloadTable();
         }
     </script>
     <style>
@@ -49,7 +128,6 @@
             text-align: center;
             width: 50%;
             height: 100%;
-            background-color: rebeccapurple;
         }
 
         #list {
@@ -58,46 +136,166 @@
             right: 0;
             width: 50%;
             height: 100%;
-            background-color: greenyellow;
+            overflow-y: auto;
         }
 
         #album_list {
             position: absolute;
-            /*top: 0;*/
+            border-collapse: collapse;
             text-align: left;
             width: 100%;
-            /*height: 100%;*/
+        }
+
+        .entry:hover {
+            background-color: darkgray;
+        }
+
+        #interaction {
+            position: absolute;
+            width: 100%;
+            height: 20%;
+            padding-top: 30px;
+        }
+
+        .button {
+            padding: 10px;
+            width: 10%;
+            background-color: darkgray;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .button:hover {
+            background-color: #cccccc;
+        }
+
+        .entry_label {
+            color: white;
+            position: absolute;
+            background-color: #3e4f8a;
+            display: none;
+        }
+
+        .text_entry {
+            border: none;
+            border-radius: 10px;
+            padding: 5px 14px;
+            width: 200px;
+        }
+
+        #loadmenu, #savemenu {
+            background-color: #3e4f8a;
+            position: absolute;
+            width: 100%;
+            height: 20%;
+            display: none;
+        }
+
+        #save_list {
+            position: absolute;
+            width: 100%;
+            top: 20%;
+            border-collapse: collapse;
+        }
+
+        .save_entry td {
+            border: none !important;
+        }
+
+        .save_entry:hover {
+            background-color: beige;
+        }
+
+        .selected {
+            background-color: #909090 !important;
         }
     </style>
 </head>
-<body>
+<body onload="reloadSaves()">
 
 <div id="form">
     <h1>
         Javascript project thing
     </h1>
     <div>
-        <label for="album">Album </label>
-        <input type="text" id="album">
+        <h3>Album</h3>
+        <label class="entry_label" for="album">Album</label>
+        <input class="text_entry" type="text" id="album">
     </div>
     <br>
     <div>
-        <label for="artist">Artist</label>
-        <input type="text" id="artist">
+        <h3>Artist</h3>
+        <label class="entry_label" for="artist">Artist</label>
+        <input class="text_entry" type="text" id="artist">
     </div>
     <br>
     <div>
-        <label for="genre">Genre</label>
-        <input type="text" id="genre">
+        <h3>Genre</h3>
+        <label class="entry_label" for="genre">Genre</label>
+        <input class="text_entry" type="text" id="genre">
     </div>
     <br>
     <div>
-        <label for="release_date">Release Date</label>
-        <input type="date" id="release_date">
+        <h3>Release Date</h3>
+        <label class="entry_label" for="release_date">Release Date</label>
+        <input class="text_entry" type="date" id="release_date">
     </div>
+    <div id="interaction">
+        <div id="button_list">
+            <button class="button"
+                    onmouseup="addData(document.getElementById('album').value,document.getElementById('artist').value,document.getElementById('genre').value,document.getElementById('release_date').value)">
+                Add
+            </button>
+            <button class="button"
+                    onmouseup="if (selectedRow !== -1) {data.splice(selectedRow,1); selectedRow = -1; reloadTable()}">
+                Remove
+            </button>
+            <button class="button" onmouseup="
+            if (selectedRow !== -1){
+                data[selectedRow].album = document.getElementById('album').value;
+                data[selectedRow].artist = document.getElementById('artist').value;
+                data[selectedRow].genre = document.getElementById('genre').value;
+                data[selectedRow].reld = document.getElementById('release_date').value;
+                reloadTable()
+            }">Update
+            </button>
+            <button class="button" onmouseup="
+            document.getElementById('album').value = null;
+            document.getElementById('artist').value = null;
+            document.getElementById('genre').value = null;
+            document.getElementById('release_date').value = null;
+            selectedRow = -1;
+            reloadTable()
+            ">Clear
+            </button>
+            <button class="button" onmouseup='document.getElementById("savemenu").style.display = "block"'>Save</button>
+            <button class="button" onmouseup='document.getElementById("loadmenu").style.display = "block"'>Load</button>
+        </div>
+    </div>
+    <div id="savemenu">
+        <form id="saveinfo">
+            <label for="savename" class="entry_label">Save Name</label>
+            <input id="savename" class="text_entry" type="text">
+            <button class="button"
+                    onmouseup='document.getElementById("savemenu").style.display = "none"; save(document.getElementById("savename").value); sToCookie();'>
+                Submit
+            </button>
+            <button class="button" onmouseup='document.getElementById("savemenu").style.display = "none"'>Cancel
+            </button>
+        </form>
+    </div>
+    <div id="loadmenu">
+        <table id="save_list">
 
+        </table>
+        <button class="button" onmouseup='document.getElementById("loadmenu").style.display = "none"; load(loadindex)'>
+            Load
+        </button>
+        <button class="button" onmouseup='document.getElementById("loadmenu").style.display = "none"'>Cancel</button>
+    </div>
 </div>
 <div id="list">
+    <h1>Songs</h1>
     <table id="album_list">
         <tr>
             <th>Album</th>
