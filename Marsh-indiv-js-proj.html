@@ -42,17 +42,20 @@
 
         function reloadTable() {
             let innercode = "<tr><th>Album</th><th>Artist</th><th>Genre</th><th>Release Date</th></tr>";
+            let dropdown = "";
             for (let i = 0; i < data.length; i++) {
                 innercode += "<tr onmouseup='selectedRow = " + i + ";" +
                     "document.getElementById(\"album\").value = data[selectedRow].album;" +
                     "document.getElementById(\"artist\").value=data[selectedRow].artist;" +
                     "document.getElementById(\"genre\").value=data[selectedRow].genre;" +
                     "document.getElementById(\"release_date\").value=data[selectedRow].dreld;reloadTable()' class='entry";
+                dropdown += "<option value='" + data[i].album + "'>";
                 if (i === selectedRow)
                     innercode += " selected";
                 innercode += "'>" + data[i].toTableRow() + "</tr>";
             }
             document.getElementById("album_list").innerHTML = innercode;
+            document.getElementById("selectbox").innerHTML = dropdown;
         }
 
         function sToCookie() {
@@ -79,7 +82,14 @@
         }
 
         function save(name) {
-            saves.push(new Save(name, new Date()));
+            for (let i = 0; i < saves.length; i++) {
+                if (saves[i].name === name) {
+                    loadindex = i;
+                }
+            }
+            if (loadindex === -1) {
+                saves.push(new Save(name, new Date()));
+            }
             let savedata = "";
             for (let j = 0; j < data.length; j++) {
                 savedata += data[j].album +
@@ -239,7 +249,9 @@
     <div>
         <h3>Album</h3>
         <label class="entry_label" for="album">Album</label>
-        <input class="text_entry" type="text" id="album">
+        <input class="text_entry" type="text" id="album" list="selectbox">
+        <datalist id="selectbox" onchange='document.getElementById("album").value = data[selectedRow].album;document.getElementById("artist").value=data[selectedRow].artist;document.getElementById("genre").value=data[selectedRow].genre;document.getElementById("release_date").value=data[selectedRow].dreld'>
+        </datalist>
     </div>
     <br>
     <div>
