@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <script>
-
+        var table = [];
     </script>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body style="background-color: cadetblue">
-<table id="alancantcode">
+<table id="alancantcode" align = "center">
         <tr>
             <th>Album</th>
             <th>Artist</th>
@@ -16,23 +16,71 @@
             <th>Date</th>
         </tr>
         <tr>
-            <td>alan</td>
-            <td>is</td>
-            <td>big</td>
-            <td>dumb</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>3</td>
+            <td>3</td>
+            <td>3</td>
         </tr>
     <script>
-        function f() {
-            let innertxt = "";
-            for (let i = 0; i < 2; i++) {
-                innertxt += "<tr>" +
-                    "            <td>alan</td>" +
-                    "            <td>is</td>" +
-                    "            <td>big</td>" +
-                    "            <td>dumb</td>" +
-                    "        </tr>";
+        function update(){
+            let innercode = "<tr><th>Album</th><th>Artist</th><th>Genre</th><th>Release Date</th></tr>";
+            for (let i = 0; i < table.length; i++) {
+                innercode += table[i];
             }
-            document.getElementById("alancantcode").innerHTML += innertxt;
+            document.getElementById("alancantcode").innerHTML = innercode;
+        }
+
+        function addData(al, ar, g, d) {
+            table.push("<tr>" +
+                "            <td>" + al.toString() + "</td>" +
+                "            <td>" + ar.toString() + "</td>" +
+                "            <td>" + g.toString() + "</td>" +
+                "            <td>" + d.toString() + "</td>" +
+                "        </tr>");
+            clearTextBox();
+            update();
+        }
+
+        function deleteData(){
+            var remove = prompt("Enter the row to delete", "");
+            if(remove != 0)
+            {
+                table.splice((remove - 1),1);
+            }
+            update();
+        }
+
+        function changeData(al, ar, g, d) {
+            var cha = prompt("Enter the row to change", "");
+            if (cha != 0) {
+            table[cha - 1] = "<tr>" +
+                "            <td>" + al.toString() + "</td>" +
+                "            <td>" + ar.toString() + "</td>" +
+                "            <td>" + g.toString() + "</td>" +
+                "            <td>" + d.toString() + "</td>" +
+                "        </tr>";
+            clearTextBox();
+            }
+            update();
+        }
+
+        function clearTextBox(){
+            document.getElementById('album').value = '';
+            document.getElementById('artist').value = '';
+            document.getElementById('genre').value = '';
+            document.getElementById('date').value = ''
         }
     </script>
 </table>
@@ -45,10 +93,10 @@
         <label for = "genre">Genre</label><br>
         <input type = "text" id = "genre" name = "genre" value = ""><br><br>
         <label for = "date">Date</label><br>
-        <input type = "month" id = "date" name = "date" value = ""><br><br><br>
-        <input type = "button" id = "save" value = "Save" onmouseup="f()">
-        <input type = "button" id = "delete" value = "Delete" onmouseup="f()">
-        <input type = "button" id = "update" value = "Update" onmouseup="f()">
+        <input type = "date" id = "date" name = "date" value = ""><br><br><br>
+        <input type = "button" id = "add" value = "Add" onmouseup="addData(document.getElementById('album').value,document.getElementById('artist').value,document.getElementById('genre').value,document.getElementById('date').value)">
+        <input type = "button" id = "delete" value = "Delete" onmouseup="deleteData()">
+        <input type = "button" id = "update" value = "Update" onmouseup="changeData(document.getElementById('album').value,document.getElementById('artist').value,document.getElementById('genre').value,document.getElementById('date').value)">
     </form>
 </body>
 </html>
