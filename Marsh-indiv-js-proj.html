@@ -16,26 +16,27 @@
             }
 
             toTableRow() {
-                return "<td>" + this.name + "</td><td>" + this.date + "</td>";
+                return "<td>" + this.name + "</td><td>" + this.date.toDateString() + "</td>";
             }
         }
 
         class Song {
-            constructor(album, artist, genre, reld) {
+            constructor(album, artist, genre, reld, dreld) {
                 this.album = album;
                 this.artist = artist;
                 this.genre = genre;
                 this.reld = reld;
+                this.dreld = dreld;
             }
 
             toTableRow() {
-                return "<td>" + this.album + "</td><td>" + this.artist + "</td><td>" + this.genre + "</td> <td>" + this.reld + "</td>"
+                return "<td>" + this.album + "</td><td>" + this.artist + "</td><td>" + this.genre + "</td> <td>" + this.dreld + "</td>"
             }
         }
 
-        function addData(alb, art, gen, date) {
+        function addData(alb, art, gen, date, display) {
             selectedRow = -1;
-            data.push(new Song(alb, art, gen, date));
+            data.push(new Song(alb, art, gen, date, display));
             reloadTable()
         }
 
@@ -46,7 +47,7 @@
                     "document.getElementById(\"album\").value = data[selectedRow].album;" +
                     "document.getElementById(\"artist\").value=data[selectedRow].artist;" +
                     "document.getElementById(\"genre\").value=data[selectedRow].genre;" +
-                    "document.getElementById(\"release_date\").value=data[selectedRow].reld;reloadTable()' class='entry";
+                    "document.getElementById(\"release_date\").value=data[selectedRow].dreld;reloadTable()' class='entry";
                 if (i === selectedRow)
                     innercode += " selected";
                 innercode += "'>" + data[i].toTableRow() + "</tr>";
@@ -66,47 +67,59 @@
         }
 
         function reloadSaves() {
-
             let rawdata = localStorage.getItem("savemap");
-            if (rawdata != null) {
+            if (rawdata !== "") {
                 let saveentries = rawdata.split("^");
                 for (let i = 0; i < saveentries.length; i++) {
                     let temp = saveentries[i].split("|");
-                    saves[i] = new Save(temp[0], temp[1]);
+                    saves[i] = new Save(temp[0], new Date(temp[1]));
                 }
             }
-            let innerelement = "<tr><th>Save Name</th><th>Date Modified</th></tr>";
-            for (let i = 0; i < saves.length; i++) {
-                innerelement += "<tr class='save_entry' onmouseup='loadindex = " + i + "'>" + saves[i].toTableRow() + "</tr>";
-            }
-            document.getElementById("save_list").innerHTML = innerelement;
+            reloadSaveTable();
         }
 
         function save(name) {
-            saves.push(new Save(name, new Date().toDateString()));
+            saves.push(new Save(name, new Date()));
             let savedata = "";
             for (let j = 0; j < data.length; j++) {
                 savedata += data[j].album +
                     "|" + data[j].artist +
                     "|" + data[j].genre +
-                    "|" + data[j].reld;
+                    "|" + data[j].reld +
+                    "|" + data[j].dreld;
                 if (j !== data.length - 1) {
-                    savedata += ":";
+                    savedata += "^";
                 }
             }
-            alert(savedata);
             localStorage.setItem(name, savedata);
             sToCookie();
         }
 
+        function deleteSave(index) {
+            saves.splice(index, 1);
+            loadindex = -1;
+            sToCookie();
+            reloadSaves();
+        }
+
+        function reloadSaveTable() {
+            let innerelement = "<tr><th>Save Name</th><th>Date Modified</th></tr>";
+            for (let i = 0; i < saves.length; i++) {
+                innerelement += "<tr class='save_entry";
+                if (loadindex === i)
+                    innerelement += " selected";
+                innerelement += "' onmouseup='loadindex = " + i + "; reloadSaveTable()'>" + saves[i].toTableRow() + "</tr>";
+            }
+            document.getElementById("save_list").innerHTML = innerelement;
+        }
+
         function load(index) {
             data = [];
-            alert(saves[index].name);
             let rawdata = localStorage.getItem(saves[index].name);
-            let entries = rawdata.split(":");
+            let entries = rawdata.split("^");
             for (let i = 0; i < entries.length; i++) {
                 let temp = entries[i].split("|");
-                data.push(new Song(temp[0], temp[1], temp[2], new Date(temp[3]).toDateString()))
+                data.push(new Song(temp[0], temp[1], temp[2], temp[3], temp[4]))
             }
             reloadTable();
         }
@@ -114,7 +127,7 @@
     <style>
         body {
             margin: 0;
-            background-color: #5d5d5d;
+            /*background-color: #207081;*/
             user-select: none;
         }
 
@@ -147,7 +160,7 @@
         }
 
         .entry:hover {
-            background-color: darkgray;
+            background-color: darkgray !important;
         }
 
         #interaction {
@@ -177,17 +190,23 @@
         }
 
         .text_entry {
-            border: none;
+            border: 1px solid black;
             border-radius: 10px;
             padding: 5px 14px;
             width: 200px;
         }
 
         #loadmenu, #savemenu {
-            background-color: #3e4f8a;
             position: absolute;
+            margin-top: 9%;
             width: 100%;
-            height: 20%;
+            display: none;
+        }
+
+        #saves_table {
+            position: absolute;
+            margin-top: 15%;
+            width: 100%;
             display: none;
         }
 
@@ -203,7 +222,7 @@
         }
 
         .save_entry:hover {
-            background-color: beige;
+            background-color: darkgray !important;
         }
 
         .selected {
@@ -243,7 +262,7 @@
     <div id="interaction">
         <div id="button_list">
             <button class="button"
-                    onmouseup="addData(document.getElementById('album').value,document.getElementById('artist').value,document.getElementById('genre').value,document.getElementById('release_date').value)">
+                    onmouseup="addData(document.getElementById('album').value,document.getElementById('artist').value,document.getElementById('genre').value,new Date(document.getElementById('release_date').value),document.getElementById('release_date').value)">
                 Add
             </button>
             <button class="button"
@@ -255,7 +274,8 @@
                 data[selectedRow].album = document.getElementById('album').value;
                 data[selectedRow].artist = document.getElementById('artist').value;
                 data[selectedRow].genre = document.getElementById('genre').value;
-                data[selectedRow].reld = document.getElementById('release_date').value;
+                data[selectedRow].reld = new Date(document.getElementById('release_date').value);
+                data[selectedRow].dreld = document.getElementById('release_date').value;
                 reloadTable()
             }">Update
             </button>
@@ -266,10 +286,16 @@
             document.getElementById('release_date').value = null;
             selectedRow = -1;
             reloadTable()
-            ">Clear
+            ">Deselect
             </button>
-            <button class="button" onmouseup='document.getElementById("savemenu").style.display = "block"'>Save</button>
-            <button class="button" onmouseup='document.getElementById("loadmenu").style.display = "block"'>Load</button>
+            <button class="button"
+                    onmouseup="document.getElementById('savemenu').style.display = 'block';document.getElementById('loadmenu').style.display= 'none';document.getElementById('saves_table').style.display= 'block'">
+                Save
+            </button>
+            <button class="button"
+                    onmouseup="document.getElementById('loadmenu').style.display = 'block';document.getElementById('savemenu').style.display= 'none';document.getElementById('saves_table').style.display= 'block'">
+                Load
+            </button>
         </div>
     </div>
     <div id="savemenu">
@@ -277,21 +303,33 @@
             <label for="savename" class="entry_label">Save Name</label>
             <input id="savename" class="text_entry" type="text">
             <button class="button"
-                    onmouseup='document.getElementById("savemenu").style.display = "none"; save(document.getElementById("savename").value); sToCookie();'>
+                    onmouseup="save(document.getElementById('savename').value); sToCookie()">
                 Submit
             </button>
-            <button class="button" onmouseup='document.getElementById("savemenu").style.display = "none"'>Cancel
+            <button class="button"
+                    onmouseup="document.getElementById('savemenu').style.display= 'none';document.getElementById('saves_table').style.display= 'none'">
+                Cancel
             </button>
         </form>
     </div>
     <div id="loadmenu">
-        <table id="save_list">
-
-        </table>
-        <button class="button" onmouseup='document.getElementById("loadmenu").style.display = "none"; load(loadindex)'>
-            Load
+        <button class="button" onmouseup="document.getElementById('savemenu').style.display= 'none'; load(loadindex)">
+            Load Save
         </button>
-        <button class="button" onmouseup='document.getElementById("loadmenu").style.display = "none"'>Cancel</button>
+        <button class="button" onmouseup='deleteSave(loadindex); reloadSaveTable()'>
+            Delete Save
+        </button>
+        <button class="button" onmouseup="loadindex = -1; reloadSaveTable()">
+            Deselect
+        </button>
+        <button class="button"
+                onmouseup="document.getElementById('loadmenu').style.display = 'none';document.getElementById('saves_table').style.display= 'none'">
+            Cancel
+        </button>
+    </div>
+    <div id="saves_table">
+        <table id="save_list">
+        </table>
     </div>
 </div>
 <div id="list">
